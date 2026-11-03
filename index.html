@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>МКТ негіздері — 10-сынып</title>
+<style>
+:root{--paper:#f3f1ec;--card:#fffdf9;--ink:#1e2430;--muted:#646a73;--line:#d9d4c8;--acc:#e0662f;--acc-d:#b44d1f;--blue:#2563a8;--green:#2e8b57;--red:#c8372d;--frame:#6b4a2b;--board:#1d2a26}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#24262b}
+body{color:var(--ink);font-family:"Segoe UI","Noto Sans",Arial,sans-serif}
+.stage{position:absolute;left:0;top:0;width:1600px;height:900px;transform-origin:0 0;background:var(--paper);overflow:hidden;
+  background-image:linear-gradient(rgba(37,99,168,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,168,.05) 1px,transparent 1px);background-size:22px 22px}
+.top{position:absolute;left:0;right:0;top:0;height:54px;display:flex;align-items:center;gap:12px;padding:0 18px;background:#1e2430;color:#fff}
+.top .lesson{font-size:13px;letter-spacing:2px;text-transform:uppercase;opacity:.75}
+.top .stitle{font-family:Georgia,"Times New Roman",serif;font-size:20px;font-weight:600;color:#ffcfb4}
+.top .sep{width:1px;height:22px;background:rgba(255,255,255,.3)}
+.top .sp{flex:1}
+.top .tb2{font:inherit;font-size:14.5px;padding:7px 14px;border-radius:4px;border:1px solid #4a505c;background:transparent;color:#eee;cursor:pointer}
+.top .tb2.fs{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:700}
+.mainw{position:absolute;left:0;right:0;top:54px;bottom:56px;display:flex}
+.leftw{position:relative;width:1060px;flex:none}
+.stage.noboard .leftw{width:100%}
+.stage.noboard .rightw{display:none}
+.slide{position:absolute;left:0;top:0;right:0;bottom:0;padding:14px 22px 10px 26px;display:none;flex-direction:column}
+.slide>*{margin-bottom:10px}
+.slide.on{display:flex}
+h2.st{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:28px;margin:0 0 8px}
+h2.st small{display:block;font:600 12.5px "Segoe UI",Arial,sans-serif;letter-spacing:2.2px;color:var(--acc);text-transform:uppercase;margin-bottom:3px}
+p.lead{font-size:17px;line-height:1.5;margin:0 0 10px;color:#2a3140}
+.def{border-left:6px solid var(--acc);background:linear-gradient(90deg,#fde3d4,#fbf4ec);padding:8px 14px;font:600 17px/1.45 Georgia,serif;border-radius:3px}
+.row{display:flex;align-items:stretch}
+.row>*{margin-right:12px}.row>*:last-child{margin-right:0}
+.grow{flex:1;min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:9px 13px}
+.card h3{margin:0 0 5px;font:700 13px "Segoe UI",Arial;text-transform:uppercase;letter-spacing:.7px;color:var(--acc)}
+.card.k h3{color:var(--blue)}
+.big2{font:700 22px Georgia,serif}
+.scn{position:relative}
+canvas.lab{display:block;width:100%;border:1px solid var(--line);border-radius:6px;background:#fff;touch-action:none}
+.ctl{display:flex;align-items:center;flex-wrap:wrap}
+.ctl>*{margin:0 8px 6px 0}
+.btn{font:inherit;font-size:14.5px;padding:7px 14px;cursor:pointer;border-radius:5px;border:1px solid #c8c1b2;background:#fff;color:var(--ink)}
+.btn:hover{border-color:var(--acc)}
+.btn.main{background:var(--acc);border-color:var(--acc-d);color:#fff;font-weight:600}
+.btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.rng{display:flex;align-items:center;font-size:14px;color:var(--muted)}
+.rng input{width:170px;margin:0 8px;accent-color:var(--acc)}
+.rng b{color:var(--ink);font:700 16px Georgia,serif;min-width:70px}
+.ro{font:15px "Segoe UI";color:#333}
+.ro b{font:700 17px Georgia,serif}
+.fdef{opacity:.18;transition:opacity .6s, box-shadow .6s}
+.fdef.on{opacity:1;box-shadow:0 0 0 3px rgba(224,102,47,.35)}
+/* стоп-кадр */
+.frz{position:absolute;left:0;top:0;right:0;bottom:0;display:none;pointer-events:none}
+.frz.on{display:block}
+.frz .tag{position:absolute;left:12px;top:10px;background:var(--red);color:#fff;font:800 15px "Segoe UI",Arial;letter-spacing:2px;padding:5px 12px;transform:rotate(-2deg);box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.fcard{position:absolute;top:10px;right:10px;width:54%;background:rgba(255,255,255,.97);border-radius:9px;border-left:6px solid var(--acc);padding:10px 14px;pointer-events:auto;box-shadow:0 6px 18px rgba(0,0,0,.22)}
+.fcard .qn{font:700 12px "Segoe UI";letter-spacing:1px;color:var(--acc);text-transform:uppercase}
+.fcard .q{font:600 18px/1.4 "Segoe UI",Arial;margin-top:2px}
+.fcard .a{display:none;margin-top:7px;padding-top:7px;border-top:1px dashed #ccc;font-size:16px;line-height:1.45;color:#1f6b3a}
+.frz.rev .fcard .a{display:block}
+.fbt{margin-top:8px}
+.fbt .btn{margin-right:6px;padding:5px 11px;font-size:14px}
+.fcard.n{width:40%}
+.fcard.l{right:auto;left:10px;top:auto;bottom:10px;width:44%}
+.fcard.mini .q,.fcard.mini .a,.fcard.mini .qn{display:none}
+.fcard.mini{width:auto}
+.ans{display:flex;align-items:center;flex-wrap:wrap;font-size:16px}
+.ans>*{margin-right:7px}
+.ans input{font:inherit;font-size:16px;width:90px;padding:4px 8px;border:1px solid #c8c1b2;border-radius:4px}
+.ok{color:var(--green);font-weight:700}.no{color:var(--red);font-weight:700}
+.qa{background:#fff;border:1px solid var(--line);border-radius:6px;padding:9px 13px;cursor:pointer;margin-bottom:8px}
+.qa .x{display:none;color:#1f6b3a;margin-top:6px;font-size:15.5px}
+.qa.open .x{display:block}
+.qa b{color:var(--acc)}
+/* тақта */
+.rightw{flex:1;padding:12px 14px 12px 2px;display:flex}
+.board{flex:1;position:relative;border:9px solid var(--frame);border-radius:6px;display:flex;flex-direction:column;overflow:hidden;
+ box-shadow:inset 0 0 40px rgba(0,0,0,.55),0 8px 20px rgba(0,0,0,.2);background:var(--board)}
+.board::after{content:"";position:absolute;left:0;right:0;bottom:0;height:10px;background:#4a321c;pointer-events:none}
+.tools{display:flex;align-items:center;padding:6px 8px;background:rgba(0,0,0,.25);flex-wrap:wrap;position:relative;z-index:2}
+.tools>*{margin-right:5px}
+.sw{width:23px;height:23px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+.sw.on{border-color:#fff}
+.tb{white-space:nowrap;font:inherit;font-size:12.5px;background:rgba(255,255,255,.07);color:#dfe7e2;border:1px solid rgba(255,255,255,.14);border-radius:3px;padding:3px 7px;cursor:pointer}
+.tb.on{background:#e8e3cf;color:#1d2a26}
+.bhint{position:absolute;left:14px;bottom:18px;right:10px;font-family:Georgia,serif;font-style:italic;font-size:13.5px;color:rgba(230,240,232,.28);pointer-events:none}
+#ink{display:block;flex:1;min-height:0;width:100%;margin-bottom:10px;touch-action:none;cursor:crosshair;position:relative;z-index:1}
+.btab{position:absolute;right:0;top:40%;display:none;background:var(--frame);color:#fff;border:none;border-radius:8px 0 0 8px;padding:16px 8px;font:700 15px "Segoe UI";cursor:pointer;z-index:5;writing-mode:vertical-rl}
+.stage.noboard .btab{display:block}
+.bottom{position:absolute;left:0;right:0;bottom:0;height:56px;display:flex;align-items:center;padding:0 16px;background:#1e2430}
+.bottom>*{margin-right:7px}
+.bottom .btn{background:transparent;color:#eee;border-color:#4a505c}
+.bottom .btn.main{background:var(--acc);border-color:var(--acc);color:#fff}
+.dot{width:30px;height:30px;border-radius:4px;border:1px solid #4a505c;background:transparent;color:#bbb;font-size:12.5px;cursor:pointer;padding:0;margin-right:3px}
+.dot.on{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700}
+.cnt{margin-left:auto;color:#cfd3dc;font:15px Georgia,serif}
+.toast{position:absolute;left:50%;top:64px;margin-left:-160px;width:320px;text-align:center;background:#1e2430;color:#fff;padding:10px 14px;border-radius:5px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+/* ===== жаңа слайдтар: 3D, ФС, дуэль, деңгейлер ===== */
+canvas.t3-cv{display:block;width:100%;border:1px solid var(--line);border-radius:6px;background:#e9eef2;touch-action:none;cursor:grab}
+.t3-hud{position:absolute;left:10px;bottom:10px;background:rgba(255,255,255,.93);border:1px solid var(--line);border-radius:6px;padding:6px 12px;font:14px "Segoe UI",Arial;color:#3a404a;pointer-events:none;max-width:70%}
+.t3-hud b{font:700 16px Georgia,serif;color:var(--ink)}
+.t3-tip{position:absolute;right:12px;top:9px;font:italic 13px Georgia,serif;color:#7a8088;pointer-events:none}
+.fl-sit{font-size:15.5px;line-height:1.48}
+.fl-sit h3{margin-bottom:4px}
+.fl-chips{display:flex;flex-wrap:wrap;margin-top:7px}
+.fl-chips span{background:#f1ece2;border:1px solid var(--line);border-radius:4px;padding:2px 8px;margin:0 6px 5px 0;font:600 13.5px "Segoe UI",Arial}
+.fl-qs{display:flex;flex-wrap:wrap;justify-content:space-between}
+.fl-q{width:49.4%;background:#fff;border:1px solid var(--line);border-left:5px solid var(--blue);border-radius:6px;padding:7px 12px;font-size:15px;line-height:1.4;margin-bottom:8px}
+.lv-t .tn,.fl-q .tn{font:700 12px "Segoe UI",Arial;letter-spacing:1px;text-transform:uppercase;color:var(--blue)}
+.ck{display:flex;align-items:center;flex-wrap:wrap;margin-top:5px}
+.ck>*{margin:0 6px 4px 0}
+.ck input{font:inherit;font-size:16px;width:96px;padding:4px 8px;border:1px solid #c8c1b2;border-radius:4px}
+.ck .btn{padding:5px 12px;font-size:14px}
+.ck-r{font-size:14.5px}
+.ck-sol{color:#3a5a40;font-size:14px}
+.btn.ck-ch{text-align:left}
+.btn.ck-right{background:#2e8b57;border-color:#2e8b57;color:#fff}
+.btn.ck-wrong{background:#fbe3e0;border-color:#c8372d;color:#9a2a22;text-decoration:line-through}
+.ck-good{border-left-color:var(--green)!important}.ck-fail{border-left-color:var(--red)!important}
+.lv-bar{display:flex;align-items:center;flex-wrap:wrap}
+.lv-bar>*{margin:0 8px 6px 0}
+.lv-sc{margin-left:auto;font:16px "Segoe UI";color:#333}
+.lv-sc b{font:700 19px Georgia,serif}
+.lv-mk{color:var(--acc)}
+.lv-pane{display:none;flex-wrap:wrap;justify-content:space-between}
+.lv-pane.on{display:flex}
+.lv-t{width:49.4%;background:#fff;border:1px solid var(--line);border-left:5px solid var(--acc);border-radius:6px;padding:8px 12px;font-size:15.5px;line-height:1.4;margin-bottom:9px}
+.lv-t .tq{margin-top:2px}
+.lv-sub{border-top:1px dashed #ddd6c8;margin-top:7px;padding-top:6px;border-left:0!important}
+.lv-note{font:italic 14px Georgia,serif;color:var(--muted)}
+.du-q{background:#1e2430;color:#fff;border-radius:8px;padding:14px 20px;font:600 27px/1.3 Georgia,serif;text-align:center;min-height:104px;display:flex;flex-direction:column;justify-content:center}
+.du-q small{display:block;font:600 13px "Segoe UI",Arial;letter-spacing:2px;color:#ffcfb4;text-transform:uppercase;margin-bottom:4px}
+.du-ar{display:flex;justify-content:space-between}
+.du-p{width:49.3%;border-radius:8px;padding:10px;border:3px solid transparent;transition:background .25s,opacity .25s}
+.du-p1{background:#fbe5dc;border-color:#e0662f}.du-p2{background:#dde8f5;border-color:#2563a8}
+.du-hd{display:flex;align-items:center;justify-content:space-between;font:700 19px "Segoe UI",Arial;margin-bottom:8px}
+.du-hd b{font:700 40px Georgia,serif;min-width:54px;text-align:center;border-radius:6px;background:#fff;padding:0 8px}
+.du-b{display:block;width:100%;min-height:104px;margin-bottom:10px;font:600 23px/1.25 "Segoe UI",Arial;background:#fff;border:2px solid #c8c1b2;border-radius:8px;cursor:pointer;touch-action:none;color:var(--ink);padding:6px 12px}
+.du-b.du-ok{background:#2e8b57;border-color:#2e8b57;color:#fff}
+.du-b.du-no{background:#c8372d;border-color:#c8372d;color:#fff}
+.du-p.du-lock{opacity:.5}
+.du-p.du-win{background:#d4f0dc}
+@keyframes duPop{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
+.du-hd b.pop{animation:duPop .5s}
+/* ===== §17 МКТ слайдтары ===== */
+.pr3 .card{display:flex;flex-direction:column}
+.pr3 canvas.lab{margin:2px 0 7px}
+.pr3 .pt{font-size:15.5px;line-height:1.42}
+.pr3 .pv{margin-top:auto;padding-top:6px;font:italic 13.5px Georgia,serif;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap}
+.chips span{background:#f1ece2;border:1px solid var(--line);border-radius:4px;padding:3px 9px;margin:0 6px 6px 0;font:600 14px "Segoe UI",Arial}
+.side{width:330px;flex:none}
+.side .card{margin-bottom:9px}
+.fm{font:italic 21px Georgia,"Times New Roman",serif;text-align:center;padding:4px 0}
+.fm .fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 4px}
+.fm .fr>span:first-child{border-bottom:1.5px solid;padding:0 3px}
+.fm .no{float:right;font:15px "Segoe UI";color:var(--muted);font-style:normal}
+.rl{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px dashed #e3ddd0;padding:3px 0;font-size:15px}
+.rl:last-child{border-bottom:0}
+.rl b{font:700 17px Georgia,serif;color:var(--ink)}
+.rl b.hid{color:#b9b2a3}
+.sm{font-size:14.5px;line-height:1.45;color:#2a3140}
+.fs2 .fl-q{width:100%}
+.mtab{width:100%;border-collapse:collapse;background:#fff;font-size:16.5px}
+.mtab th{background:#4b7f99;color:#fff;font:600 14.5px "Segoe UI",Arial;padding:6px 10px;text-align:left}
+.mtab td{border:1px solid #c8d4da;padding:9px 12px;vertical-align:middle;line-height:1.38}
+.mtab td.f{font:italic 19px Georgia,serif;white-space:nowrap}
+.subs .btn{min-width:62px;font:700 16px Georgia,serif}
+.ex .qa{font-size:16px;line-height:1.45}
+.ex .qa .x{font-size:15.5px;line-height:1.55}
+.st3{font:italic 13px Georgia,serif;color:#7a8088}
+#jx17{flex:1;min-height:0;overflow-y:auto;align-content:flex-start;padding-right:4px}
+#coQs .fl-q{padding:5px 11px;margin-bottom:6px;font-size:14.5px;line-height:1.36}
+#coQs .ck-ch{padding:4px 10px;font-size:13.5px}
+#coCtl .btn{padding:5px 10px;margin-right:5px}
+
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+ <div class="top"><span class="lesson">Физика · 10-сынып · §17</span><span class="sep"></span><span class="stitle" id="stitle"></span><span class="sp"></span>
+  <button class="tb2" id="bdT">✎ Тақтаны жинау</button><button class="tb2 fs" id="fsTop">⛶ Толық экран</button></div>
+ <div class="mainw">
+  <div class="leftw" id="slides">
+
+<!-- 1 -->
+<section class="slide" data-title="Кіріспе" data-hint="Тақырып, күні...">
+ <h2 class="st" style="font-size:38px;line-height:1.14"><small>Молекулалық физика · §17</small>Газдардың молекулалық-кинетикалық теориясының негізгі қағидалары және олардың тәжірибелік дәлелдемелері</h2>
+ <p class="lead" style="color:var(--muted)">МКТ қағидалары · Рэлей тәжірибесі · туннельдік микроскоп · броундық қозғалыс · Штерн тәжірибесі · M<sub>r</sub>, ν, M, N<sub>A</sub></p>
+ <canvas class="lab" id="cTitle" style="height:440px"></canvas>
+ <div style="font-size:14px;color:var(--muted)">«Тайтөбе ауылының ЖОББМ» КММ · мұғалім Төленді И.Н.</div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-title="МКТ-ның үш қағидасы" data-hint="1) бөлшектер  2) қозғалыс  3) әрекеттесу">
+ <h2 class="st"><small>І бөлім · негізгі қағидалар</small>Молекулалық-кинетикалық теорияның үш қағидасы</h2>
+ <p class="lead">Диффузия мен броундық қозғалыс, сұйықтың жұғуы мен капилляр бойымен көтерілуі, кебу мен қайнау, балқу мен кристалдану — бәрі МКТ-ның үш қағидасымен түсіндіріледі.</p>
+ <div class="row pr3">
+  <div class="card grow"><h3>1-қағида</h3><canvas class="lab" id="cP1" style="height:240px"></canvas><div class="pt">Барлық заттар бөлшектерден — <b>араларында бос аралықтары бар</b> молекулалар мен атомдардан тұрады.</div><div class="pv">Дәлелі: Рэлей тәжірибесі, туннельдік микроскоп</div></div>
+  <div class="card grow"><h3>2-қағида</h3><canvas class="lab" id="cP2" style="height:240px"></canvas><div class="pt">Заттың бөлшектері <b>үздіксіз және бейберекет</b> қозғалыста болады.</div><div class="pv">Дәлелі: броундық қозғалыс, диффузия, Штерн тәжірибесі</div></div>
+  <div class="card grow"><h3>3-қағида</h3><canvas class="lab" id="cP3" style="height:240px"></canvas><div class="pt">Зат бөлшектері бір-бірімен <b>өзара әрекеттеседі</b>: тартылады және тебіледі.</div><div class="pv">Дәлелі: F(r) тәуелділігі, серпімділік, жұғу</div></div>
+ </div>
+ <div class="card"><h3>Күтілетін нәтиже</h3><div class="sm">МКТ қағидаларына дәлел келтіру; жылулық құбылыстарды МКТ негізінде түсіндіру; молекуланың массасы мен өлшемін, молекулалар саны мен зат мөлшерін есептеу.</div></div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-title="І қағиданың дәлелі: Рэлей тәжірибесі" data-hint="d = V / S,  N = V / V₀,  m₀ = m / N">
+ <h2 class="st"><small>ІІ бөлім · МКТ І қағидасының дәлелі</small>Рэлей тәжірибесі: май тамшысы су бетінде</h2>
+ <div class="row">
+  <div class="grow">
+   <div class="scn" id="bRay"><canvas class="lab" id="cRay" style="height:520px"></canvas></div>
+   <div class="ctl" style="margin-top:8px"><span class="rng">Тамшы көлемі V<input type="range" id="rayV" min="0.2" max="1.6" step="0.1" value="1" style="width:130px"><b id="rayVv"></b></span>
+    <button class="btn main" id="rayGo">💧 Тамшыны тамызу</button><button class="btn" id="rayRe">↺</button><button class="btn on" id="rayGrid">▦ Палетка</button></div>
+  </div>
+  <div class="side">
+   <div class="card"><h3>Рэлей болжамы</h3><div class="sm">Зәйтүн майы су бетінде <b>бір молекула қалыңдығындай</b> қабатпен жайылады. Олай болса, қабаттың қалыңдығы — молекуланың диаметрі:</div>
+    <div class="fm">d = <span class="fr"><span>V</span><span>S</span></span>,&nbsp;&nbsp; V<sub>0</sub> = d<sup>3</sup></div><div class="fm">N = <span class="fr"><span>V</span><span>V<sub>0</sub></span></span>,&nbsp;&nbsp; m<sub>0</sub> = <span class="fr"><span>m</span><span>N</span></span></div></div>
+   <div class="card k"><h3>Өлшеу нәтижесі</h3>
+    <div class="rl"><span>Тамшы көлемі V</span><b id="ro1">—</b></div>
+    <div class="rl"><span>Дақ ауданы S</span><b id="ro2">—</b></div>
+    <div class="rl"><span>Диаметр d = V/S</span><b id="ro3">—</b></div>
+    <div class="rl"><span>Молекулалар саны N</span><b id="ro4">—</b></div>
+    <div class="rl"><span>Тамшы массасы m = ρV</span><b id="ro5">—</b></div>
+    <div class="rl"><span>Бір молекула m<sub>0</sub></span><b id="ro6">—</b></div>
+    <div class="st3" style="margin-top:4px">ρ<sub>май</sub> = 920 кг/м³ · палетканың бір торы 10×10 см</div></div>
+   <div class="card"><h3>Назар аударыңдар!</h3><div class="sm">Мұхит бетінде қалыңдығы 1/16 мкм жұқа қабат түрінде жайылған <b>1 тонна мұнай 12 км²</b> ауданды алады.</div></div>
+  </div>
+ </div>
+</section>
+
+<!-- 4 -->
+<section class="slide fs2" data-title="Функционалдық сауаттылық: мұнай төгілуі" data-hint="S = 550 000 · 12 км²">
+ <h2 class="st"><small>Функционалдық сауаттылық · Каспий</small>Танкер апаты: мұнай дағы қаншалықты үлкен?</h2>
+ <div class="row">
+  <div class="card fl-sit" style="width:470px;flex:none"><h3>Жағдаят</h3>
+   Жүк көтергіштігі <b>550 мың тонна</b> танкер Каспий теңізінде апатқа ұшырады делік. Мұнай су бетінде өте жұқа қабат — қалыңдығы небәрі бірнеше ондаған молекуладай пленка болып жайылады. Пленка астындағы су ауамен газ алмасуын тоқтатады, ал құстардың қауырсыны майланып, жылу ұстамай қалады.
+   <div class="fl-chips"><span>1 т мұнай → 12 км²</span><span>қабат 1/16 мкм</span><span>Каспий: 371 000 км²</span><span>молекула ~ 1 нм</span></div>
+   <canvas class="lab" id="cOil" style="height:300px;margin-top:8px"></canvas>
+   <div class="ctl" style="margin-top:7px"><span class="rng">Төгілген мұнай<input type="range" id="oilT" min="0" max="100" step="1" value="40" style="width:200px"><b id="oilTv"></b></span></div>
+  </div>
+  <div class="grow"><div class="fl-qs" id="flQs"></div></div>
+ </div>
+</section>
+
+<!-- 4b -->
+<section class="slide fs2" data-title="Функционалдық сауаттылық: иіс газы" data-hint="N = n·V,  N(CO) = N·ppm/10⁶">
+ <h2 class="st"><small>Функционалдық сауаттылық · Тұрмыстағы қауіпсіздік</small>Түнгі пеш: иіс газы бөлмеге қалай тарайды?</h2>
+ <div class="row">
+  <div class="card fl-sit" style="width:470px;flex:none"><h3>Жағдаят</h3>
+   Ауылдағы үйде кешкі 22:00-де пешке көмір салынды. «Жылу шығып кетпесін» деп мұржа қақпағын ерте жауып қойды. Көмір оттегі жетпей толық жанбаса, <b>иіс газы — көміртек монооксиді CO</b> түзіледі. Оның түсі де, иісі де жоқ, ал молекулалары бейберекет қозғалып, бүкіл бөлмеге тарайды.
+   <div class="fl-chips"><span>бөлме 5×4×2,5 м</span><span>M(CO) = 28 г/моль</span><span>ауа: 2,5·10²⁵ молекула/м³</span><span>1 ppm = миллионнан 1 үлес</span></div>
+   <canvas class="lab" id="cCo" style="height:300px;margin-top:8px"></canvas>
+   <div class="ctl" id="coCtl" style="margin-top:7px"><button class="btn" id="coDmp">Қақпақ: ашық</button><button class="btn" id="coWin">Терезе: жабық</button><button class="btn main" id="coGo">⏸</button><button class="btn" id="coFast">⏩ ×4</button><button class="btn" id="coRe">↺</button></div>
+  </div>
+  <div class="grow"><div class="fl-qs" id="coQs"></div></div>
+ </div>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-title="Туннельдік микроскоп" data-hint="Ине — үлгі арасындағы туннельдік ток">
+ <h2 class="st"><small>І қағиданың дәлелі · 1986 ж. Нобель сыйлығы</small>Сканерлеуші туннельдік микроскоп атомдарды «көреді»</h2>
+ <div class="scn" id="bStm"><canvas class="lab" id="cStm" style="height:440px"></canvas></div>
+ <div class="ctl"><button class="btn main" id="stGo">▶ Сканерлеу</button><button class="btn" id="stRe">↺ Қайта бастау</button><button class="btn" id="stFast">⏩ Жылдам</button><span class="ro">Ток: <b id="stI">—</b></span><button class="btn fsb">⛶ Толық экран</button></div>
+ <div class="row">
+  <div class="card grow"><h3>Ине</h3><div class="sm">Металл ине үлгінің бетінен <b>1 нм-ден де кіші</b> қашықтықта сырғанайды. Ине мен үлгі арасына аз ғана кернеу беріледі.</div></div>
+  <div class="card grow"><h3>Туннельдік ток</h3><div class="sm">Электрондар саңылаудан «өтіп» инеге жетеді. Ара қашықтық 0,1 нм азайса, ток шамамен <b>10 есе</b> артады.</div></div>
+  <div class="card grow"><h3>Басқару жүйесі</h3><div class="sm">Ток шамасын өлшеп, компьютер үлгі бетінің <b>рельефін</b> салады. 1986 ж. Г. Бинниг пен Г. Рорер — Нобель сыйлығы.</div></div>
+ </div>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-title="ІІ қағида: броундық қозғалыс" data-hint="Бөлшекті молекулалар соққылайды">
+ <h2 class="st"><small>МКТ ІІ қағидасының дәлелі</small>Броундық қозғалыс: тозаң түйіршігінің «биі»</h2>
+ <div class="row">
+  <div class="grow">
+   <div class="scn" id="bBr"><canvas class="lab" id="cBr" style="height:520px"></canvas></div>
+   <div class="ctl" style="margin-top:8px"><span class="rng">Температура<input type="range" id="brT" min="100" max="900" step="10" value="300" style="width:130px"><b id="brTv"></b></span>
+    <button class="btn" id="brSz">Бөлшек: кіші</button><button class="btn on" id="brMol">Молекулаларды көрсету</button><button class="btn" id="brCl">⌫ Ізді өшіру</button></div>
+  </div>
+  <div class="side">
+   <div class="card"><h3>Тарих</h3><div class="sm">1827 ж. ағылшын ботанигі <b>Роберт Броун</b> микроскоппен судағы гүл тозаңының үздіксіз, ретсіз қозғалысын байқады. Бұл қозғалыс ешқашан тоқтамайды.</div></div>
+   <div class="card k"><h3>Түсіндірмесі</h3><div class="sm">Бөлшекті жан-жағынан <b>су молекулалары</b> соққылайды. Әр сәтте соққылар теңгерілмейді — бөлшек кездейсоқ жаққа ығысады.</div></div>
+   <div class="card"><h3>Байқа!</h3><div class="sm">• Температура артса — қозғалыс <b>қарқынды</b>.<br>• Бөлшек үлкен болса — қозғалысы <b>баяу</b>.<br>• Сызық — 0,5 с сайын белгіленген орындар (Перрен әдісі).</div></div>
+  </div>
+ </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-title="Штерн тәжірибесі (3D)" data-hint="v = ωR(R − r) / s">
+ <h2 class="st"><small>ІІ қағиданың дәлелі · 3D модель</small>Штерн тәжірибесі: күміс атомдарының жылдамдығы</h2>
+ <div class="row">
+  <div class="side" style="width:340px">
+   <div class="card"><h3>Құрылғы</h3><div class="sm">Осьтегі <b>платина сым</b> күміспен қапталған, ток өткенде қызып, күміс атомдары буланады. Атомдар ішкі цилиндрдің <b>саңылауы</b> арқылы ұшып шығып, сыртқы цилиндрге тұнады. Құрылғы <b>вакуумда</b>.</div></div>
+   <div class="card k"><h3>Формула қайдан шықты?</h3>
+    <div class="fm" style="font-size:19px">υ = <span class="fr"><span>R − r</span><span>t</span></span><span class="no">(1)</span></div>
+    <div class="fm" style="font-size:19px">s = υ<sub>ц</sub>t = ωRt ⇒ t = <span class="fr"><span>s</span><span>ωR</span></span><span class="no">(2)</span></div>
+    <div class="fm" style="font-size:21px;color:var(--acc-d)">υ = <span class="fr"><span>ωR(R − r)</span><span>s</span></span><span class="no">(3)</span></div>
+    <div class="sm">Атом ұшып келгенше цилиндр бұрылып үлгереді — жолақ <b>s</b> қашықтыққа ығысады.</div></div>
+   <div class="card"><h3>Өлшеу</h3>
+    <div class="rl"><span>R / r</span><b>10 см / 1 см</b></div>
+    <div class="rl"><span>ω = 2πn</span><b id="snW">—</b></div>
+    <div class="rl"><span>Ығысу s</span><b id="snS">—</b></div>
+    <div class="rl"><span>υ<sub>орт</sub></span><b id="snV">—</b></div></div>
+  </div>
+  <div class="grow">
+   <div class="scn" id="b3d"><canvas class="t3-cv" id="c3d" data-tick="sn" style="height:560px"></canvas><div class="t3-hud" id="snHud"></div><div class="t3-tip">↔ Тінтуірмен бұрыңыз · дөңгелекпен жақындатыңыз</div></div>
+   <div class="ctl" style="margin-top:8px"><span class="rng">Айналу жиілігі n<input type="range" id="snN" min="0" max="60" step="5" value="40" style="width:120px"><b id="snNv"></b></span>
+    <button class="btn on" id="snRot">⟳ Айналу: қосулы</button><button class="btn" id="snClr">↺ Тазалау</button><button class="btn on" id="snFol">🎥 Камера: цилиндрмен бірге</button><button class="btn" id="snTop">Үстінен қарау</button><button class="btn fsb">⛶ Толық экран</button></div>
+  </div>
+ </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-title="ІІІ қағида: өзара әрекеттесу күштері" data-hint="r < r₀ — тебілу, r > r₀ — тартылыс, r = r₀ — F = 0">
+ <h2 class="st"><small>V бөлім · МКТ ІІІ қағидасының дәлелі</small>Молекулалар арасындағы өзара әрекеттесу күштері</h2>
+ <canvas class="lab" id="cFr" style="height:430px"></canvas>
+ <div class="ctl"><button class="btn main" id="frGo">▶ Босатып жіберу</button><button class="btn" id="frRe">↺</button><span class="ro" id="frTxt"></span></div>
+ <div class="row">
+  <div class="card grow" id="frc1"><h3 style="text-transform:none;font-size:16px">r &lt; r<sub>0</sub></h3><div class="sm"><b>Тебілу</b> күштері басым. Сондықтан сұйықтар мен қатты денелерді сығу өте қиын.</div></div>
+  <div class="card grow" id="frc2"><h3 style="text-transform:none;font-size:16px">r = r<sub>0</sub></h3><div class="sm">Тартылыс пен тебілу <b>теңеседі</b>: F = 0. Молекулалар осы қалыптың маңында тербеледі.</div></div>
+  <div class="card grow" id="frc3"><h3 style="text-transform:none;font-size:16px">r &gt; r<sub>0</sub></h3><div class="sm"><b>Тартылыс</b> басым. 2–3 молекула өлшеміндей қашықтықта әрекеттесу күші жоғалады.</div></div>
+ </div>
+ <div class="st3">Молекуланы тінтуірмен тартып, сол жерден босатыңыз немесе «▶ Босатып жіберу» батырмасын басыңыз.</div>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-title="Mr, зат мөлшері, мольдік масса, Авогадро саны" data-hint="ν = m/M = N/N_A,  M = m₀N_A">
+ <h2 class="st"><small>ІІІ бөлім · МКТ негізгі шамалары</small>Салыстырмалы молекулалық масса, мольдік масса, зат мөлшері</h2>
+ <table class="mtab"><tr><th>Анықтама</th><th style="width:210px">Формула</th><th style="width:150px">Өлшем бірлігі</th></tr>
+  <tr><td><b>Салыстырмалы молекулалық масса M<sub>r</sub></b> — зат молекуласы массасының көміртек атомы массасының 1/12 бөлігіне қатынасы.</td><td class="f">M<sub>r</sub> = m<sub>0</sub> : (<sup>1</sup>⁄<sub>12</sub> m<sub>0C</sub>)</td><td>өлшемсіз</td></tr>
+  <tr><td><b>Зат мөлшері ν</b> — денедегі молекулалар санының 0,012 кг көміртектегі атомдар санына қатынасы. <b>Моль</b> — 12 г көміртекте қанша атом болса, сонша молекуладан тұратын зат мөлшері.</td><td class="f">ν = N / N<sub>A</sub><br>ν = m / M</td><td>[ν] = 1 моль</td></tr>
+  <tr><td><b>Мольдік масса M</b> — бір моль мөлшерінде алынған заттың массасы. N<sub>A</sub> = 6,02·10<sup>23</sup> моль<sup>−1</sup>.</td><td class="f">M = m<sub>0</sub>N<sub>A</sub><br>M = M<sub>r</sub>·10<sup>−3</sup> кг/моль</td><td>[M] = 1 кг/моль</td></tr></table>
+ <div class="row">
+  <div class="card" style="width:330px;flex:none"><h3>Молекула</h3><canvas class="lab" id="cMol" style="height:220px;border:0"></canvas><div class="sm" id="molMr" style="text-align:center;font-size:17px"></div></div>
+  <div class="card grow"><h3>Есептегіш: заттың массасы бойынша</h3>
+   <div class="ctl subs" id="subs"></div>
+   <div class="ctl"><span class="rng">Масса m<input type="range" id="molM" min="1" max="200" step="1" value="36" style="width:260px"><b id="molMv"></b></span></div>
+   <div class="row"><div class="grow"><div class="rl"><span>M = M<sub>r</sub>·10<sup>−3</sup></span><b id="mo1"></b></div><div class="rl"><span>ν = m / M</span><b id="mo2"></b></div></div>
+    <div class="grow"><div class="rl"><span>N = ν·N<sub>A</sub></span><b id="mo3"></b></div><div class="rl"><span>m<sub>0</sub> = M / N<sub>A</sub></span><b id="mo4"></b></div></div></div>
+  </div>
+ </div>
+</section>
+
+<!-- 10 -->
+<section class="slide ex" data-title="Есеп шығару үлгілері" data-hint="Берілгені → формула → есептеу">
+ <h2 class="st"><small>Бекіту</small>Есеп шығару үлгілері <span style="font:15px 'Segoe UI';color:var(--muted)">(шешуін көру үшін басыңыз)</span></h2>
+ <div class="qa"><b>1.</b> Су молекуласының массасын анықтаңдар. M<sub>r</sub>(H<sub>2</sub>O) = 2A<sub>r</sub>(H) + A<sub>r</sub>(O).<div class="x">M<sub>r</sub> = 2·1 + 16 = 18 ⇒ M = 18·10<sup>−3</sup> кг/моль.<br>m<sub>0</sub> = M / N<sub>A</sub> = 0,018 / 6,02·10<sup>23</sup> ≈ <b>3·10<sup>−26</sup> кг</b>.</div></div>
+ <div class="qa"><b>2.</b> 1 г судағы молекулалар саны қанша?<div class="x">ν = m / M = 0,001 / 0,018 ≈ 0,056 моль;&nbsp; N = ν·N<sub>A</sub> = 0,056·6,02·10<sup>23</sup> ≈ <b>3,3·10<sup>22</sup></b> молекула.</div></div>
+ <div class="qa"><b>3.</b> Өз тәжірибең: молекула өлшемін 10<sup>−9</sup> м деп алып, дәптердің бір бетіндегі (20 см × 16,5 см) молекулалар санын анықтаңдар.<div class="x">S = 0,20·0,165 = 0,033 м²; бір молекула алатын аудан d² = 10<sup>−18</sup> м².<br>N = S / d² = 0,033 / 10<sup>−18</sup> = <b>3,3·10<sup>16</sup></b> молекула (бір қабатта).</div></div>
+ <div class="qa"><b>4.</b> Штерн тәжірибесінде n = 45 айн/с, R = 10 см, r = 1 см, жолақтың ығысуы s = 3,9 мм. Атомдардың орташа жылдамдығы қандай?<div class="x">ω = 2πn = 2·3,14·45 ≈ 283 рад/с.<br>υ = ωR(R − r) / s = 283·0,1·0,09 / 0,0039 ≈ <b>650 м/с</b>.</div></div>
+ <div class="qa"><b>5.</b> Рэлей тәжірибесі: көлемі 1 мм³ май тамшысы 0,8 м² ауданға жайылды. Молекула диаметрі қандай?<div class="x">V = 1 мм³ = 10<sup>−9</sup> м³;&nbsp; d = V / S = 10<sup>−9</sup> / 0,8 ≈ <b>1,25·10<sup>−9</sup> м</b>.</div></div>
+</section>
+
+<!-- 10б: Жаттығу 17 -->
+<section class="slide" data-title="Жаттығу 17" data-hint="Берілгені → ХБЖ → формула → есептеу">
+ <h2 class="st"><small>Оқулық · жаттығу</small>Жаттығу 17 <span style="font:15px 'Segoe UI';color:var(--muted)">— жауапты енгізіп тексеріңіз, 2 мүмкіндік; кейін толық шешуі шығады</span></h2>
+ <div class="lv-bar"><span class="lv-sc" id="jxSc" style="margin-left:0"></span><button class="btn" id="jxRe">↺ Қайта бастау</button><button class="btn fsb">⛶ Толық экран</button></div>
+ <div class="lv-pane on" id="jx17"></div>
+ <div class="lv-note">N<sub>A</sub> = 6,02·10<sup>23</sup> моль<sup>−1</sup>, π = 3,14. A<sub>r</sub>(Au) = 197, A<sub>r</sub>(Al) = 27. Бөлшекті үтірмен жазыңыз.</div>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-title="Сергіту сәті: МКТ дуэлі" data-hint="Кім бірінші дұрыс басады?">
+ <h2 class="st"><small>Сергіту сәті · ойын</small>МКТ дуэлі <span style="font:15px 'Segoe UI';color:var(--muted)">— тақтаға екі оқушы шығады, кім бірінші дұрыс басса, сол ұпай алады</span></h2>
+ <div class="du-q" id="duQ"><small>10 сұрақ</small>«▶ Бастау» батырмасын басыңыз</div>
+ <div class="du-ar">
+  <div class="du-p du-p1" id="duP1"><div class="du-hd"><span>1-ойыншы</span><b id="duS1">0</b></div><div class="du-op"></div></div>
+  <div class="du-p du-p2" id="duP2"><div class="du-hd"><span>2-ойыншы</span><b id="duS2">0</b></div><div class="du-op"></div></div>
+ </div>
+ <div class="ctl"><button class="btn main" id="duGo">▶ Бастау</button><button class="btn" id="duNx">⏭ Келесі сұрақ</button><span class="ro">Қате басқан ойыншы осы сұрақта бұғатталады.</span><button class="btn fsb">⛶ Толық экран</button></div>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-title="Деңгейлік тапсырмалар" data-hint="A — 4×1, B — 4×2, C — 2×4 = 20 балл">
+ <h2 class="st"><small>Бағалау · 20 балл</small>Деңгейлік тапсырмалар</h2>
+ <div class="lv-bar"><button class="btn lv-tab on" data-lv="A">A деңгей · 4 балл</button><button class="btn lv-tab" data-lv="B">B деңгей · 8 балл</button><button class="btn lv-tab" data-lv="C">C деңгей · 8 балл</button>
+  <span class="lv-sc" id="lvSc"></span><button class="btn" id="lvRe">↺ Қайта бастау</button><button class="btn fsb">⛶ Толық экран</button></div>
+ <div class="lv-pane on" id="lvA"></div><div class="lv-pane" id="lvB"></div><div class="lv-pane" id="lvC"></div>
+ <div class="lv-note">Әр жауапқа 2 мүмкіндік беріледі. N<sub>A</sub> = 6,02·10<sup>23</sup> моль<sup>−1</sup>, π = 3,14. Бөлшекті үтірмен жазыңыз: 0,044. Баға: 18–20 балл «5», 14–17 «4», 9–13 «3».</div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-title="Қорытынды және үй тапсырмасы" data-hint="Бүгін не білдім?">
+ <h2 class="st"><small>Қорытынды</small>Жауабы қандай? <span style="font:15px Segoe UI;color:var(--muted)">(жауапты көру үшін басыңыз)</span></h2>
+ <div class="qa"><b>1.</b> Штерн тәжірибесінде құрылғы неліктен вакуум камерасына орналастырылады?<div class="x">Күміс атомдары ауа молекулаларымен соқтығысып шашырамай, саңылаудан сыртқы цилиндрге дейін <b>түзу сызықпен</b> ұшуы үшін. Әйтпесе жолақ пайда болмайды.</div></div>
+ <div class="qa"><b>2.</b> Айналатын цилиндрдің бетіне тұнған күміс қабатының қалыңдығы неліктен барлық жерде бірдей емес?<div class="x">Атомдардың жылдамдықтары әртүрлі: жылдам атомдар аз, баяулары көбірек ығысады. Атомдардың көпшілігінің жылдамдығы орташа мәнге жақын — жолақ сол жерде қалың, шеттерінде жұқа.</div></div>
+ <div class="qa"><b>3.</b> Мұнайдың төгілуі қандай экологиялық мәселелерді тудырады?<div class="x">Пленка судың оттегімен қанығуын тоқтатады — балық пен планктон тұншығады; құстардың қауырсыны жабысып, жылу ұстамайды және ұша алмайды; жағалау мен құмдар ұзақ жылдарға ластанады.</div></div>
+ <div class="qa"><b>4.</b> Сынған шыны бөліктерін бір-біріне қатты қысса да неге жабыспайды?<div class="x">Беттер тегіс емес — молекулалардың көпшілігі бір-біріне r<sub>0</sub>-ге дейін жақындай алмайды, ал 2–3 молекула өлшемінен үлкен қашықтықта тартылыс күші жоғалады. Шыныны балқытса, молекулалар жақындап, бөліктер жабысады.</div></div>
+ <div class="card"><h3>Үй тапсырмасы</h3><div style="font-size:16px;line-height:1.6">§17 оқу, МКТ-ның үш қағидасын және олардың дәлелдерін айтып беру. «Өз тәжірибең» №2: палетка (М 1:100000) көмегімен мұнай дағының ауданын анықтау. Есептер: көмірқышқыл газы мен оттегі молекуласының массасын табу.</div></div>
+</section>
+
+  </div>
+  <div class="rightw"><div class="board">
+   <div class="tools"><button class="sw on" data-c="#f2efe2" style="background:#f2efe2"></button><button class="sw" data-c="#ffd75e" style="background:#ffd75e"></button><button class="sw" data-c="#ff8fa3" style="background:#ff8fa3"></button><button class="sw" data-c="#7fd8ff" style="background:#7fd8ff"></button>
+    <button class="tb" data-w="2.4">жіңішке</button><button class="tb on" data-w="3.8">орташа</button><button class="tb" id="erase">⌫</button><button class="tb" id="undo">↶</button><button class="tb" id="wipe">тазалау</button><button class="tb" id="bdClose">⟩ жинау</button></div>
+   <div class="bhint" id="bhint"></div><canvas id="ink"></canvas></div></div>
+  <button class="btab" id="bdOpen">✎ Тақта</button>
+ </div>
+ <div class="bottom"><button class="btn" id="prev">◀ Артқа</button><span id="dots"></span><button class="btn main" id="next">Келесі ▶</button><span class="cnt" id="cnt"></span><button class="btn" id="snd">🔊</button><button class="btn" id="fs">⛶ Толық экран</button></div>
+ <div class="toast" id="toast"></div>
+</div>
+
+<script src="three.min.js"></script>
+<script>
+var $=function(id){return document.getElementById(id);};
+function each(l,f){Array.prototype.forEach.call(l,f);}
+function matches(el,s){var f=el.matches||el.webkitMatchesSelector||el.msMatchesSelector;return f.call(el,s);}
+function closest(el,s){while(el&&el.nodeType===1){if(matches(el,s))return el;el=el.parentNode;}return null;}
+function fx(v,d){if(d===undefined)d=1;return (Math.round(v*Math.pow(10,d))/Math.pow(10,d)).toFixed(d).replace('.',',');}
+function mod(a,b){return ((a%b)+b)%b;}
+function clamp(v,a,b){return v<a?a:v>b?b:v;}
+function parseNum(s){s=String(s).trim().replace(/\s/g,'').replace(',','.');return s===''?NaN:Number(s);}
+var toastT;function toast(m){var t=$('toast');t.textContent=m;t.className='toast show';clearTimeout(toastT);toastT=setTimeout(function(){t.className='toast';},2300);}
+var store={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+var SND=(function(){var ac=null,on=store.get('m17_snd',true);
+ function init(){if(ac){if(ac.state==='suspended')ac.resume();return;}var C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C();}
+ function tone(f,d,v,at,ty){if(!ac||!on)return;v=v||.14;at=at||0;var t=ac.currentTime+at,o=ac.createOscillator(),g=ac.createGain();o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d+.02);}
+ return{init:init,isOn:function(){return on;},toggle:function(){on=!on;store.set('m17_snd',on);return on;},
+  ok:function(){tone(660,.14);tone(990,.25,.14,.11);},bad:function(){tone(190,.3,.08,0,'square');},tick:function(){tone(1300,.05,.05);},page:function(){tone(520,.07,.04);},
+  stop:function(){tone(880,.09,.12,0,'square');tone(440,.18,.1,.08,'square');}};})();
+document.addEventListener('mousedown',function(){SND.init();},true);document.addEventListener('touchstart',function(){SND.init();},true);
+
+/* ===== стоп-кадр ===== */
+function Freezer(boxId){var box=$(boxId),d=document.createElement('div'),self=this;d.className='frz';
+ d.innerHTML='<div class="tag"></div><div class="fcard"><div class="qn"></div><div class="q"></div><div class="a"></div><div class="fbt"><button class="btn rv">💡 Жауапты ашу</button><button class="btn main go">▶ Жалғастыру</button><button class="btn mn" title="Кішірейту">▁</button></div></div>';
+ box.appendChild(d);this.d=d;
+ d.querySelector('.rv').onclick=function(){d.classList.add('rev');if(self.onRev)self.onRev();SND.tick();};
+ d.querySelector('.go').onclick=function(){self.hide();var f=self.onGo;self.onGo=null;if(f)f();};
+ d.querySelector('.mn').onclick=function(){d.querySelector('.fcard').classList.toggle('mini');};}
+Freezer.prototype.show=function(o){var d=this.d;d.querySelector('.tag').textContent=o.tag||'⏸ СТОП-КАДР';d.querySelector('.qn').textContent=o.num||'';d.querySelector('.q').innerHTML=o.q;
+ d.querySelector('.a').innerHTML=o.a||'';d.querySelector('.rv').style.display=o.a?'':'none';d.querySelector('.go').textContent=o.go||'▶ Жалғастыру';
+ d.classList.remove('rev');d.querySelector('.fcard').classList.remove('mini');d.querySelector('.fcard').classList.toggle('l',o.side==='l');d.querySelector('.fcard').classList.toggle('n',o.side==='n');d.classList.add('on');this.onRev=o.onRev;this.onGo=o.onGo;SND.stop();};
+Freezer.prototype.hide=function(){this.d.classList.remove('on');};
+Freezer.prototype.isOn=function(){return this.d.classList.contains('on');};
+
+/* ===== сурет көмекшілері ===== */
+var INK='#1e2430';
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
+function txt(c,t,x,y,col,size,align,wt,font){c.fillStyle=col||INK;c.font=(wt||'')+' '+(size||14)+'px '+(font||'"Segoe UI",Arial,sans-serif');c.textAlign=align||'left';c.fillText(t,x,y);c.textAlign='left';}
+function arw(c,x0,y0,x1,y1,col,w){w=w||3;var a=Math.atan2(y1-y0,x1-x0),L=Math.sqrt((x1-x0)*(x1-x0)+(y1-y0)*(y1-y0)),hs=Math.min(L*.6,6+w*2.2);c.strokeStyle=col;c.fillStyle=col;c.lineWidth=w;c.lineCap='round';
+ c.beginPath();c.moveTo(x0,y0);c.lineTo(x1-Math.cos(a)*hs*.6,y1-Math.sin(a)*hs*.6);c.stroke();c.beginPath();c.moveTo(x1,y1);c.lineTo(x1-hs*Math.cos(a-.42),y1-hs*Math.sin(a-.42));c.lineTo(x1-hs*Math.cos(a+.42),y1-hs*Math.sin(a+.42));c.closePath();c.fill();}
+function flab(c,main,sub,x,y,col){c.fillStyle=col;c.font='italic 700 19px Georgia,serif';var w1=c.measureText(main).width;c.font='600 12.5px "Segoe UI",Arial';var w2=sub?c.measureText(sub).width:0;var x0=x-(w1+w2)/2;
+ c.fillStyle=FLBG;c.fillRect(x0-3,y-17,w1+w2+6,23);c.fillStyle=col;c.font='italic 700 19px Georgia,serif';c.fillText(main,x0,y);if(sub){c.font='600 12.5px "Segoe UI",Arial';c.fillText(sub,x0+w1+1,y+4);}}
+function force(c,x,y,dx,dy,col,main,sub){if(Math.abs(dx)+Math.abs(dy)<3)return;arw(c,x,y,x+dx,y+dy,col,4);var L=Math.sqrt(dx*dx+dy*dy);flab(c,main,sub,x+dx+dx/L*22,y+dy+dy/L*20+6,col);}
+var FLBG='rgba(255,255,255,.75)';var FC={t:'#2e8b57',f:'#c8372d',g:'#2563a8',n:'#6b5fb0',r:'#e0662f'};
+function car(c,x,y,s,col,rot){c.save();c.translate(x,y);c.fillStyle='rgba(0,0,0,.18)';c.beginPath();c.ellipse(0,1,36*s,4*s,0,0,6.3);c.fill();
+ c.fillStyle=col;rr(c,-34*s,-22*s,68*s,14*s,5*s);c.fill();c.beginPath();c.moveTo(-20*s,-21*s);c.lineTo(-11*s,-33*s);c.lineTo(11*s,-33*s);c.lineTo(22*s,-21*s);c.closePath();c.fill();
+ c.fillStyle='#cfe8f7';c.beginPath();c.moveTo(-16*s,-22*s);c.lineTo(-9.5*s,-30.5*s);c.lineTo(-1*s,-30.5*s);c.lineTo(-1*s,-22*s);c.closePath();c.fill();c.beginPath();c.moveTo(2*s,-22*s);c.lineTo(2*s,-30.5*s);c.lineTo(10*s,-30.5*s);c.lineTo(18*s,-22*s);c.closePath();c.fill();
+ c.fillStyle='#ffe28a';c.fillRect(30*s,-19*s,4*s,4*s);c.fillStyle='#e05a4a';c.fillRect(-34*s,-19*s,3*s,4*s);
+ for(var k=0;k<2;k++){var wx=k?20*s:-20*s;c.fillStyle='#222';c.beginPath();c.arc(wx,-7*s,7.5*s,0,6.3);c.fill();c.fillStyle='#aaa';c.beginPath();c.arc(wx,-7*s,3.6*s,0,6.3);c.fill();
+  c.strokeStyle='#555';c.lineWidth=1.2*s;for(var j=0;j<3;j++){var a=rot+j*2.09;c.beginPath();c.moveTo(wx,-7*s);c.lineTo(wx+Math.cos(a)*3.6*s,-7*s+Math.sin(a)*3.6*s);c.stroke();}}
+ c.restore();}
+function tree(c,x,y,s){c.fillStyle='#7a5a3a';c.fillRect(x-3*s,y-26*s,6*s,26*s);c.fillStyle='#4f9a56';c.beginPath();c.arc(x,y-34*s,15*s,0,6.3);c.arc(x-9*s,y-26*s,11*s,0,6.3);c.arc(x+9*s,y-26*s,11*s,0,6.3);c.fill();}
+function roadScene(c,w,h,off,gy){var g=c.createLinearGradient(0,0,0,gy);g.addColorStop(0,'#bcdcf2');g.addColorStop(1,'#eef6fb');c.fillStyle=g;c.fillRect(0,0,w,gy);
+ c.fillStyle='#bcd7a0';c.beginPath();c.moveTo(0,gy);for(var x=0;x<=w+20;x+=20){var u=x+off*.25;c.lineTo(x,gy-55-16*Math.sin(u/90)-9*Math.sin(u/37));}c.lineTo(w,gy);c.closePath();c.fill();
+ for(var i=0;i<Math.ceil(w/170)+2;i++){var tx=mod(i*170-off*.8,Math.ceil(w/170+2)*170)-90;tree(c,tx,gy-2,1);}
+ c.fillStyle='#3b3f45';c.fillRect(0,gy,w,64);c.fillStyle='#e9e9e9';c.fillRect(0,gy+3,w,2);c.fillRect(0,gy+59,w,2);c.fillStyle='#f2c230';for(var x2=-mod(off,44);x2<w;x2+=44)c.fillRect(x2,gy+31,24,3);
+ c.fillStyle='#9cc27e';c.fillRect(0,gy+64,w,h-gy-64);}
+function filmFrame(c,w,h){c.strokeStyle='rgba(200,55,45,.85)';c.lineWidth=5;var L=36;[[8,8,1,1],[w-8,8,-1,1],[8,h-8,1,-1],[w-8,h-8,-1,-1]].forEach(function(p){c.beginPath();c.moveTo(p[0],p[1]+L*p[3]);c.lineTo(p[0],p[1]);c.lineTo(p[0]+L*p[2],p[1]);c.stroke();});}
+function qbubble(c,x,y,t){c.fillStyle='#fff';c.strokeStyle=INK;c.lineWidth=2;rr(c,x-70,y-44,140,40,12);c.fill();c.stroke();c.beginPath();c.moveTo(x-8,y-5);c.lineTo(x,y+10);c.lineTo(x+8,y-5);c.fill();txt(c,t||'? ? ?',x,y-17,'#e0662f',20,'center','800');}
+function panel(c,x,y,w,h){c.fillStyle='rgba(255,255,255,.92)';rr(c,x,y,w,h,8);c.fill();c.strokeStyle='#d9d4c8';c.lineWidth=1;c.stroke();}
+function person(c,x,y,hh,ang,col,armUp){c.save();c.translate(x,y);c.rotate(ang);c.strokeStyle=col||INK;c.lineWidth=hh*.075;c.lineCap='round';
+ c.beginPath();c.moveTo(-hh*.1,0);c.lineTo(0,-hh*.45);c.lineTo(hh*.1,0);c.moveTo(0,-hh*.45);c.lineTo(0,-hh*.82);c.moveTo(0,-hh*.75);c.lineTo(armUp?hh*.12:hh*.18,armUp?-hh*1.02:-hh*.5);c.stroke();
+ c.fillStyle=col||INK;c.beginPath();c.arc(0,-hh*.92,hh*.1,0,6.3);c.fill();c.restore();}
+var LAB={},TT=0;
+var TICK={};
+function mkTask(box,o,cb){var d=document.createElement('div');d.className=o.cls;
+ d.innerHTML=(o.head?'<div class="tn">'+o.head+'</div>':'')+'<div class="tq">'+o.q+'</div><div class="ck"></div>';box.appendChild(d);
+ var ck=d.querySelector('.ck'),r=document.createElement('span'),left=2,st={pts:o.pts||0,got:0,done:false},inp=null;r.className='ck-r';
+ if(!o.show)o.show=o.ch?o.ch[o.a]:String(o.a).replace('.',',')+' '+(o.unit||'');
+ function fin(ok){st.done=true;st.got=ok?st.pts:0;d.classList.add(ok?'ck-good':'ck-fail');if(inp)inp.disabled=true;
+  each(ck.querySelectorAll('.ck-ch'),function(x,j){x.disabled=true;if(j===o.a)x.classList.add('ck-right');});
+  r.innerHTML=(ok?'<span class="ok">✓ Дұрыс!'+(st.pts?' +'+st.pts+' балл':'')+'</span>':'<span class="no">✗ Дұрыс жауабы: '+o.show+'</span>')+(o.sol?' <span class="ck-sol">'+o.sol+'</span>':'');if(cb)cb();}
+ function miss(){left--;SND.bad();if(left<=0)fin(false);else r.innerHTML='<span class="no">✗ Қате. Тағы 1 мүмкіндік бар.</span>'+(o.hint?' <span class="ck-sol">Кеңес: '+o.hint+'</span>':'');}
+ if(o.ch){o.ch.forEach(function(t,i){var b=document.createElement('button');b.className='btn ck-ch';b.innerHTML=t;
+   b.onclick=function(){if(st.done)return;if(i===o.a){SND.ok();fin(true);}else{b.classList.add('ck-wrong');b.disabled=true;miss();}};ck.appendChild(b);});}
+ else{ck.innerHTML=(o.pre?'<span>'+o.pre+'</span>':'')+'<input placeholder="?">'+(o.unit?'<span>'+o.unit+'</span>':'')+'<button class="btn main">Тексеру</button>';inp=ck.querySelector('input');
+  var go=function(){if(st.done)return;var v=parseNum(inp.value);if(!isFinite(v)){toast('Сан енгізіңіз');return;}
+   if(Math.abs(v-o.a)<=Math.abs(o.a)*(o.tol||.01)+1e-9){SND.ok();fin(true);}else{miss();inp.select();}};
+  ck.querySelector('button').onclick=go;inp.onkeydown=function(e){if(e.keyCode===13)go();};}
+ ck.appendChild(r);return st;}
+each(document.querySelectorAll('.fsb'),function(b){b.onclick=function(){toggleFS();};});
+
+var FZ={};
+/* ===== §17 МКТ: жалпы көмекшілер ===== */
+var SUPD={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+function sup(n){return String(n).split('').map(function(ch){return SUPD[ch]||ch;}).join('');}
+function sci(v,d){if(d===undefined)d=2;if(!v)return '0';var e=Math.floor(Math.log(Math.abs(v))/Math.LN10+1e-9),m=v/Math.pow(10,e);if(Math.abs(+m.toFixed(d))>=10){m/=10;e++;}return e===0?fx(m,d):fx(m,d)+'·10'+sup(e);}
+function gauss(){var u=1-Math.random(),v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(6.2832*v);}
+function ball(c,x,y,r,col,dk){var g=c.createRadialGradient(x-r*.35,y-r*.38,r*.12,x,y,r);g.addColorStop(0,'#fff');g.addColorStop(.38,col);g.addColorStop(1,dk||col);c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill();}
+function gasRect(P,w,h,dt,rad){P.forEach(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.x<rad){p.x=rad;p.vx=Math.abs(p.vx);}if(p.x>w-rad){p.x=w-rad;p.vx=-Math.abs(p.vx);}if(p.y<rad){p.y=rad;p.vy=Math.abs(p.vy);}if(p.y>h-rad){p.y=h-rad;p.vy=-Math.abs(p.vy);}});}
+function collide(P,rad){var m=2*rad;for(var i=0;i<P.length;i++)for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j],dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy;
+ if(d2<m*m&&d2>0){var d=Math.sqrt(d2),nx=dx/d,ny=dy/d,rv=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;if(rv<0){a.vx+=rv*nx;a.vy+=rv*ny;b.vx-=rv*nx;b.vy-=rv*ny;}var o=(m-d)/2;a.x-=nx*o;a.y-=ny*o;b.x+=nx*o;b.y+=ny*o;}}}
+function dash(c,x0,y0,x1,y1,col,w){c.save();c.strokeStyle=col;c.lineWidth=w||1.5;c.setLineDash([6,5]);c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();c.restore();}
+
+/* ===== 1: титул — шар ішіндегі газ ===== */
+var GT=null;
+LAB.cTitle=function(c,w,h,dt){var bx=w*.17,by=h*.47,R=Math.min(h*.44,200),lx=w*.56,ly=h*.5;
+ if(!GT){GT=[];for(var i=0;i<44;i++){var rr0=Math.sqrt(Math.random())*(R-14),t=Math.random()*6.2832,s=70+Math.random()*90,q=Math.random()*6.2832;GT.push({x:rr0*Math.cos(t),y:rr0*Math.sin(t),vx:s*Math.cos(q),vy:s*Math.sin(q),c:i%4===0});}}
+ GT.forEach(function(p){p.x+=p.vx*dt;p.y+=p.vy*dt;var d=Math.sqrt(p.x*p.x+p.y*p.y),lim=R-11;if(d>lim){var nx=p.x/d,ny=p.y/d,vn=p.vx*nx+p.vy*ny;if(vn>0){p.vx-=2*vn*nx;p.vy-=2*vn*ny;}p.x=nx*lim;p.y=ny*lim;}});collide(GT,9);
+ c.fillStyle='#f7f4ee';c.fillRect(0,0,w,h);
+ c.strokeStyle='#8a7f70';c.lineWidth=1.6;c.beginPath();c.moveTo(bx,by+102);c.quadraticCurveTo(bx-26,by+150,bx+6,h-6);c.stroke();
+ var g=c.createRadialGradient(bx-30,by-42,8,bx,by,112);g.addColorStop(0,'#ffd9c4');g.addColorStop(1,'#e0662f');c.fillStyle=g;c.beginPath();c.ellipse(bx,by,84,100,0,0,6.2832);c.fill();
+ c.fillStyle='#c4521f';c.beginPath();c.moveTo(bx-8,by+106);c.lineTo(bx+8,by+106);c.lineTo(bx,by+97);c.fill();
+ var sx=bx+34,sy=by-22;c.strokeStyle=INK;c.lineWidth=2;c.beginPath();c.arc(sx,sy,13,0,6.2832);c.stroke();
+ dash(c,sx+4,sy-12,lx-R*.2,ly-R*.98,'rgba(30,36,48,.4)');dash(c,sx+4,sy+12,lx-R*.2,ly+R*.98,'rgba(30,36,48,.4)');
+ c.save();c.beginPath();c.arc(lx,ly,R,0,6.2832);c.fillStyle='#fffdf8';c.fill();c.clip();
+ GT.forEach(function(p){c.strokeStyle=p.c?'rgba(37,99,168,.25)':'rgba(224,102,47,.25)';c.lineWidth=5;c.lineCap='round';c.beginPath();c.moveTo(lx+p.x,ly+p.y);c.lineTo(lx+p.x-p.vx*.09,ly+p.y-p.vy*.09);c.stroke();});
+ GT.forEach(function(p){ball(c,lx+p.x,ly+p.y,9,p.c?'#4f8fd8':'#f08a55',p.c?'#1f4e79':'#a8461a');});c.restore();
+ c.strokeStyle='#3b4250';c.lineWidth=11;c.beginPath();c.arc(lx,ly,R,0,6.2832);c.stroke();
+ c.strokeStyle='#5a4632';c.lineWidth=24;c.lineCap='round';c.beginPath();c.moveTo(lx+R*.74,ly+R*.74);c.lineTo(lx+R*.74+60,ly+R*.74+60);c.stroke();
+ txt(c,'Шардағы ауа',bx,by+128,'#646a73',15,'center','600');
+ txt(c,'× 10⁹ үлкейтілген',lx,ly-R-8,'#646a73',14,'center','600');
+ var X=w-190;[['1','Бөлшектерден тұрады','#e0662f'],['2','Үздіксіз қозғалады','#2563a8'],['3','Өзара әрекеттеседі','#2e8b57']].forEach(function(a,i){var y=h*.27+i*78;
+  c.fillStyle=a[2];c.beginPath();c.arc(X,y,17,0,6.2832);c.fill();txt(c,a[0],X,y+7,'#fff',19,'center','700','Georgia,serif');txt(c,a[1],X+28,y+6,INK,16,'left','600');});
+ txt(c,'МКТ-ның үш қағидасы',X-17,h*.27-38,'#646a73',13,'left','700');};
+
+/* ===== 2: үш қағида ===== */
+LAB.cP1=function(c,w,h){c.fillStyle='#fffdf9';c.fillRect(0,0,w,h);var cols=7,rows=5,sp=Math.min((w-30)/cols,(h-52)/rows),r=sp*.3,x0=(w-sp*(cols-1))/2,y0=18+r;
+ for(var j=0;j<rows;j++)for(var i=0;i<cols;i++){var x=x0+i*sp+2.2*Math.sin(TT*7+i*1.7+j*2.3),y=y0+j*sp+2.2*Math.cos(TT*6.3+i*2.1+j*1.1);ball(c,x,y,r,'#5b9bd5','#1f4e79');}
+ var yy=y0+sp*.5,xa=x0+2*sp+r*.4,xb=x0+3*sp-r*.4;arw(c,xa,yy,xb,yy,'#e0662f',2);arw(c,xb,yy,xa,yy,'#e0662f',2);
+ txt(c,'бос аралық',w/2,h-26,'#e0662f',13.5,'center','700');txt(c,'молекула өлшемі d ≈ 10⁻¹⁰ м',w/2,h-8,'#646a73',13,'center');};
+var P2=null,P2T=[];
+LAB.cP2=function(c,w,h,dt){if(!P2){P2=[];for(var i=0;i<22;i++){var q=Math.random()*6.2832,s=70+Math.random()*80;P2.push({x:20+Math.random()*(w-40),y:20+Math.random()*(h-40),vx:s*Math.cos(q),vy:s*Math.sin(q)});}}
+ gasRect(P2,w,h,dt,7);collide(P2,7);P2T.push([P2[0].x,P2[0].y]);if(P2T.length>170)P2T.shift();
+ c.fillStyle='#fffdf9';c.fillRect(0,0,w,h);c.strokeStyle='rgba(200,55,45,.5)';c.lineWidth=1.6;c.beginPath();P2T.forEach(function(p,i){if(i)c.lineTo(p[0],p[1]);else c.moveTo(p[0],p[1]);});c.stroke();
+ P2.forEach(function(p,i){ball(c,p.x,p.y,7,i?'#5b9bd5':'#e8564b',i?'#1f4e79':'#8f1f17');});};
+LAB.cP3=function(c,w,h){c.fillStyle='#fffdf9';c.fillRect(0,0,w,h);var r0=Math.min(w*.32,96),r=r0*(1+.3*Math.sin(TT*2.1)),cx=w/2,y=h*.42,R=r0*.43,x1=cx-r/2,x2=cx+r/2;
+ dash(c,cx-r0/2,y-R-20,cx-r0/2,y+R+8,'#c9c2b3',1.2);dash(c,cx+r0/2,y-R-20,cx+r0/2,y+R+8,'#c9c2b3',1.2);
+ ball(c,x1,y,R,'#f08a55','#a8461a');ball(c,x2,y,R,'#f08a55','#a8461a');
+ var dr=r-r0,L=clamp(Math.abs(dr)*1.7,0,46),ya=y+R+20,col,lab;
+ if(dr<-3){col='#c8372d';lab='r < r₀ : тебілу';arw(c,x1,ya,x1-L,ya,col,3);arw(c,x2,ya,x2+L,ya,col,3);}
+ else if(dr>3){col='#2563a8';lab='r > r₀ : тартылыс';arw(c,x1,ya,x1+L,ya,col,3);arw(c,x2,ya,x2-L,ya,col,3);}
+ else{col='#2e8b57';lab='r = r₀ : F = 0';}
+ txt(c,lab,cx,h-10,col,15,'center','700');arw(c,x1,y-R-12,x2,y-R-12,'#646a73',1.5);arw(c,x2,y-R-12,x1,y-R-12,'#646a73',1.5);txt(c,'r',cx,y-R-18,'#646a73',15,'center','italic 700','Georgia,serif');};
+
+/* ===== 3: Рэлей тәжірибесі ===== */
+var RA={ph:'idle',t:0,r:0,grid:true,rev:false,V:1,seed:Math.random()*6};
+var RAD=1.2e-9,RARHO=920;
+function raS(){return RA.V*1e-9/RAD;}
+function raOut(){var V=RA.V*1e-9,done=RA.ph==='done',Sm=Math.round(raS()*100)/100,d=V/Sm,N=V/(d*d*d),m=RARHO*V;
+ function put(id,v,show){var b=$(id);b.innerHTML=show?v:'?';b.className=show?'':'hid';}
+ put('ro1',fx(RA.V,1)+' мм³ = '+sci(V,1)+' м³',true);put('ro2',fx(Sm,2)+' м²',done);put('ro3',sci(d,1)+' м',done&&RA.rev);
+ put('ro4',sci(N,1),done&&RA.rev);put('ro5',sci(m,1)+' кг',done&&RA.rev);put('ro6',sci(m/N,1)+' кг',done&&RA.rev);}
+function raReset(){RA.ph='idle';RA.t=0;RA.r=0;RA.rev=false;RA.seed=Math.random()*6;FZ.ray.hide();raOut();}
+function blob(c,x,y,R,s){c.beginPath();for(var i=0;i<=90;i++){var a=i/90*6.2832,q=R*(1+.03*Math.sin(5*a+s)+.022*Math.sin(9*a+s*2)+.012*Math.sin(13*a+TT*.6));if(i)c.lineTo(x+q*Math.cos(a),y+q*Math.sin(a));else c.moveTo(x+q*Math.cos(a),y+q*Math.sin(a));}c.closePath();}
+LAB.cRay=function(c,w,h,dt){var TW=2,THh=1.4,k=Math.min((w-56)/TW,(h-44)/THh),tw=TW*k,th=THh*k,tx=(w-tw)/2,ty=(h-th)/2+4,cx=tx+tw/2,cy=ty+th/2,Rf=Math.sqrt(raS()/Math.PI);
+ if(RA.ph==='fall'){RA.t+=dt;if(RA.t>.7){RA.ph='spread';RA.t=0;SND.tick();}}
+ else if(RA.ph==='spread'){RA.t+=dt;RA.r=Rf*(1-Math.exp(-RA.t*1.7));if(RA.t>3.4){RA.r=Rf;RA.ph='done';raOut();
+  FZ.ray.show({num:'Сұрақ',q:'Май дағы бұдан әрі неге жайылмайды? Қабаттың қалыңдығын қалай табамыз?',a:'Қабат <b>бір молекула</b> қалыңдығына жеткенде одан әрі жұқара алмайды. Сондықтан қабат қалыңдығы — молекуланың диаметрі: <b>d = V / S</b>.',side:'l',
+   onRev:function(){RA.rev=true;raOut();},onGo:function(){RA.rev=true;raOut();}});}}
+ c.fillStyle='#efe9dc';c.fillRect(0,0,w,h);
+ c.fillStyle='#8a6a48';rr(c,tx-12,ty-12,tw+24,th+24,10);c.fill();
+ var g=c.createLinearGradient(tx,ty,tx+tw,ty+th);g.addColorStop(0,'#c9e6f3');g.addColorStop(1,'#9fcbe2');c.fillStyle=g;c.fillRect(tx,ty,tw,th);
+ c.save();c.beginPath();c.rect(tx,ty,tw,th);c.clip();
+ c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=1.2;for(var i=0;i<6;i++){var yy=ty+th*(i+.5)/6;c.beginPath();for(var x=tx;x<=tx+tw;x+=12){var q=yy+3*Math.sin(x*.03+TT*1.4+i);if(x===tx)c.moveTo(x,q);else c.lineTo(x,q);}c.stroke();}
+ if(RA.r>0){var Rp=RA.r*k;blob(c,cx,cy,Rp,RA.seed);var sg=c.createRadialGradient(cx,cy,Rp*.1,cx,cy,Rp);sg.addColorStop(0,'rgba(255,214,120,.62)');sg.addColorStop(.55,'rgba(214,150,230,.45)');sg.addColorStop(.85,'rgba(120,205,170,.45)');sg.addColorStop(1,'rgba(255,190,90,.6)');c.fillStyle=sg;c.fill();c.strokeStyle='rgba(140,90,30,.55)';c.lineWidth=1.5;c.stroke();}
+ if(RA.grid){for(i=1;i<20;i++){var X=tx+i*.1*k;c.strokeStyle=i%5?'rgba(30,60,90,.17)':'rgba(30,60,90,.38)';c.lineWidth=i%5?.7:1.2;c.beginPath();c.moveTo(X,ty);c.lineTo(X,ty+th);c.stroke();}
+  for(i=1;i<14;i++){var Y=ty+i*.1*k;c.strokeStyle=i%5?'rgba(30,60,90,.17)':'rgba(30,60,90,.38)';c.lineWidth=i%5?.7:1.2;c.beginPath();c.moveTo(tx,Y);c.lineTo(tx+tw,Y);c.stroke();}}
+ if(RA.ph==='done'){var Rp2=RA.r*k;arw(c,cx-Rp2,cy,cx+Rp2,cy,'#7a3b0f',2);arw(c,cx+Rp2,cy,cx-Rp2,cy,'#7a3b0f',2);c.fillStyle='rgba(255,255,255,.85)';rr(c,cx-62,cy-30,124,22,5);c.fill();txt(c,'D = '+fx(2*RA.r,2)+' м',cx,cy-13,'#7a3b0f',15,'center','700');}
+ c.restore();
+ if(RA.ph==='idle'||RA.ph==='fall'){var ty2=RA.ph==='fall'?cy-40+40*Math.min(1,RA.t/.45):cy-40;
+  c.fillStyle='rgba(220,235,245,.85)';c.strokeStyle='#5d6b78';c.lineWidth=1.5;c.beginPath();c.moveTo(cx-14,0);c.lineTo(cx+14,0);c.lineTo(cx+14,cy-110);c.lineTo(cx+4,cy-50);c.lineTo(cx-4,cy-50);c.lineTo(cx-14,cy-110);c.closePath();c.fill();c.stroke();
+  c.fillStyle='#c8372d';c.fillRect(cx-14,0,28,26);
+  if(RA.ph==='fall'&&RA.t<.6||RA.ph==='idle'){ball(c,cx,ty2,RA.ph==='fall'?7:6,'#f2c14e','#a87410');}
+  if(RA.ph==='idle'){c.fillStyle='rgba(255,255,255,.9)';rr(c,cx-150,cy+20,300,30,6);c.fill();txt(c,'«💧 Тамшыны тамызу» батырмасын басыңыз',cx,cy+40,INK,14,'center','600');}}
+ if(RA.ph==='spread'||RA.ph==='done'){var ix=w-118,iy=96,ir=80;c.save();c.beginPath();c.arc(ix,iy,ir,0,6.2832);c.fillStyle='#fff';c.fill();c.clip();
+  c.fillStyle='#9fcbe2';c.fillRect(ix-ir,iy+4,ir*2,ir);var n=7;for(i=0;i<n;i++){var mx=ix-ir+18+i*(2*ir-36)/(n-1);ball(c,mx,iy-4,8,'#f2c14e','#a87410');}c.restore();
+  c.strokeStyle='#3b4250';c.lineWidth=4;c.beginPath();c.arc(ix,iy,ir,0,6.2832);c.stroke();
+  arw(c,ix+44,iy-30,ix+44,iy-12,'#c8372d',2);arw(c,ix+44,iy+22,ix+44,iy+4,'#c8372d',2);txt(c,'d',ix+54,iy+2,'#c8372d',16,'left','italic 700','Georgia,serif');
+  txt(c,'бүйірінен · бір молекула',ix,iy+ir+18,'#3b4250',12.5,'center','700');}
+ txt(c,'Ванна 2 м × 1,4 м · үстінен көрініс',tx,ty-18,'#646a73',13,'left','600');};
+$('rayV').oninput=function(){RA.V=+this.value;$('rayVv').textContent=fx(RA.V,1)+' мм³';if(RA.ph!=='idle')raReset();else raOut();};
+$('rayGo').onclick=function(){raReset();RA.ph='fall';SND.tick();};$('rayRe').onclick=raReset;
+$('rayGrid').onclick=function(){RA.grid=!RA.grid;this.classList.toggle('on',RA.grid);};
+$('rayVv').textContent='1,0 мм³';
+
+/* ===== 4: ФС — мұнай төгілуі ===== */
+var CASP=[[.42,.02],[.55,.04],[.63,.1],[.71,.14],[.69,.22],[.58,.26],[.55,.33],[.6,.4],[.56,.48],[.62,.56],[.67,.64],[.7,.72],[.68,.82],[.62,.92],[.52,.97],[.44,.95],[.4,.86],[.42,.76],[.36,.66],[.38,.56],[.42,.46],[.4,.36],[.34,.28],[.28,.2],[.3,.1]];
+function oilTons(){var s=+$('oilT').value;return s>=100?550000:Math.max(1,Math.round(Math.pow(10,s/100*Math.log(550000)/Math.LN10)));}
+function grp(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
+LAB.cOil=function(c,w,h){var t=oilTons(),S=12*t,P=CASP.map(function(p){return[w/2+(p[0]-.5)*h*1.05,8+p[1]*(h-16)];}),A=0;
+ for(var i=0;i<P.length;i++){var a=P[i],b=P[(i+1)%P.length];A+=a[0]*b[1]-b[0]*a[1];}A=Math.abs(A)/2;
+ c.fillStyle='#e9dfc4';c.fillRect(0,0,w,h);c.fillStyle='#93c4e3';c.beginPath();P.forEach(function(p,i){if(i)c.lineTo(p[0],p[1]);else c.moveTo(p[0],p[1]);});c.closePath();c.fill();c.strokeStyle='#5e8fae';c.lineWidth=1.5;c.stroke();
+ txt(c,'Каспий теңізі',w/2+h*.2,h*.5,'#2f5f7e',13,'left','700');txt(c,'371 000 км²',w/2+h*.2,h*.5+16,'#2f5f7e',12.5,'left');
+ var rp=Math.sqrt(S/371000*A/Math.PI),ox=w/2+(.53-.5)*h*1.05,oy=8+.5*(h-16);
+ var g=c.createRadialGradient(ox,oy,0,ox,oy,Math.max(rp,1));g.addColorStop(0,'rgba(25,20,15,.82)');g.addColorStop(.85,'rgba(45,35,25,.75)');g.addColorStop(1,'rgba(150,80,160,.6)');c.fillStyle=g;c.beginPath();c.arc(ox,oy,Math.max(rp,1.5),0,6.2832);c.fill();
+ c.fillStyle='rgba(255,255,255,.92)';rr(c,8,h-58,w-16,50,6);c.fill();
+ txt(c,grp(t)+' т  →  S = '+grp(S)+' км²',16,h-38,INK,14.5,'left','700');
+ txt(c,S<371000?'Каспий ауданының '+fx(S/371000*100,S<3710?2:1)+' %-ы':'Каспийден '+fx(S/371000,1)+' есе үлкен!',16,h-17,S<371000?'#2563a8':'#c8372d',14,'left','700');};
+$('oilT').oninput=function(){$('oilTv').textContent=grp(oilTons())+' т';};$('oilT').oninput();
+var FLQ=[{q:'550 мың тонна мұнай су бетінде 1/16 мкм қабатпен жайылса, қанша аудан алады?',pre:'S = ',a:6.6,unit:'млн км²',hint:'1 т мұнай → 12 км²',sol:'S = 550 000 · 12 = 6 600 000 км² = 6,6 млн км²'},
+ {q:'Бұл аудан Каспий теңізінің ауданынан (371 000 км²) неше есе үлкен?',a:17.8,tol:.025,unit:'есе',hint:'6 600 000 : 371 000',sol:'6 600 000 / 371 000 ≈ 17,8 есе'},
+ {q:'Пленка қалыңдығы 1/16 мкм. Молекула өлшемі ~1 нм болса, пленка неше молекула қалыңдығындай?',a:62.5,tol:.025,unit:'молекула',hint:'1 мкм = 1000 нм',sol:'1000 / 16 = 62,5 нм ⇒ ≈ 62 молекула'},
+ {q:'Мұнай пленкасы теңіз тіршілігіне ең алдымен неге қауіпті?',ch:['Ауадағы оттегінің суға өтуін және күн сәулесін бөгейді','Су температурасын қайнау нүктесіне дейін көтереді','Су молекулаларын атомдарға ыдыратады'],a:0},
+ {q:'Төгілген мұнайға қарсы ең дұрыс алғашқы әрекет қайсы?',ch:['Дақты бондармен қоршап, жайылуын тоқтатып, жинап алу','Дақты жуғыш затпен араластырып, суға батыру','Жел мен толқын өзі шашыратқанша күту'],a:0}];
+FLQ.forEach(function(o,i){o.cls='fl-q';o.head='Сұрақ '+(i+1);mkTask($('flQs'),o);});
+
+/* ===== 4б: ФС — иіс газы (CO) ===== */
+var CO={t:0,m:0,dmp:true,win:false,run:true,fast:false,P:[],A:[],S:[],sk:0};
+function coPpm(){return CO.m/28/2080*1e6;}
+function coClock(){var mn=Math.floor(22*60+CO.t*60)%1440,h=Math.floor(mn/60),m=mn%60;return(h<10?'0':'')+h+':'+(m<10?'0':'')+m;}
+function coE(n){if(n<1)return '0';var e=Math.floor(Math.log(n)/Math.LN10);return fx(n/Math.pow(10,e),1)+'·10'+String(e).split('').map(function(d){return '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d];}).join('');}
+function coLvl(p){return p<50?['Қауіпсіз','#2e8b57']:p<200?['Детектор дабыл қағады','#c99a10']:p<800?['Бас ауруы, жүрек айнуы','#e0662f']:p<1600?['Бас айналу, есінен тану','#c8372d']:['ӨМІРГЕ ҚАУІПТІ!','#8e1b14'];}
+LAB.cCo=function(c,w,h,dt){var rx=14,rx2=w-48,ry=62,fy=h-70,sx=rx+8,sw=56,sh=66,sy=fy-sh,chx=sx+sw/2-8,chw=16,wy1=ry+34,wy2=ry+96,dy=ry+(fy-ry)*.42,i,by;
+ /* масса балансы: 1 с = 3 мин (×4 жылдам); қақпақ жабық → 30 г/сағ, терезе ашық → ауа 2,5 рет/сағ алмасады */
+ if(CO.run){var dh=dt/20*(CO.fast?4:1),E=CO.dmp?.4:30,k=CO.win?2.5:.08;CO.m=Math.max(0,CO.m+(E-k*CO.m)*dh);CO.t+=dh;
+  if(CO.t>=9){CO.t=9;CO.run=false;$('coGo').textContent='▶';}}
+ var ppm=coPpm(),K=Math.min(420,Math.round(ppm/4)),live=CO.P.filter(function(p){return!p.out;});
+ if(!CO.A.length)for(i=0;i<70;i++)CO.A.push({x:rx+6+Math.random()*(rx2-rx-12),y:ry+6+Math.random()*(fy-ry-12),q:Math.random()*6.2832});
+ if(CO.run){for(var s=0;s<3&&live.length<K;s++){var p={x:sx+sw+3,y:sy+sh*.5+(Math.random()-.5)*14,q:(Math.random()-.5)*1.6-.3,out:false,a:1};CO.P.push(p);live.push(p);}
+  for(var e=live.length-K;e>0;e--){var j=Math.floor(Math.random()*live.length);live[j].out=true;live.splice(j,1);}}
+ var mv=function(p,v){p.q+=gauss()*.35;p.x+=v*Math.cos(p.q)*dt;p.y+=v*Math.sin(p.q)*dt;
+  if(p.x<rx+4){p.x=rx+4;p.q=Math.PI-p.q;}if(p.y<ry+4){p.y=ry+4;p.q=-p.q;}if(p.y>fy-4){p.y=fy-4;p.q=-p.q;}
+  if(p.x>rx2-4&&p.x<rx2+6&&!(p.out&&CO.win&&p.y>wy1&&p.y<wy2)){p.x=rx2-4;p.q=Math.PI-p.q;}
+  if(p.x<sx+sw+2&&p.y>sy-2){if(p.y-sy<sx+sw-p.x)p.y=sy-3;else p.x=sx+sw+3;}};
+ if(CO.run){var ve=CO.fast?90:45;CO.A.forEach(function(p){mv(p,ve);});
+  CO.P.forEach(function(p){if(p.out){if(CO.win){var ty=(wy1+wy2)/2;p.q=p.x>rx2-6?gauss()*.3:Math.atan2(ty-p.y,rx2+20-p.x)+gauss()*.4;}else p.a-=dt*1.2;}mv(p,p.out&&CO.win?ve*1.6:ve);});
+  CO.P=CO.P.filter(function(p){return p.a>0&&p.x<w+4;});
+  CO.sk+=dt;if(CO.dmp&&CO.sk>.12){CO.sk=0;CO.S.push({x:chx+chw/2,y:4,a:.7,r:4});}
+  CO.S.forEach(function(s){s.y-=14*dt;s.x+=10*dt;s.r+=5*dt;s.a-=.35*dt;});CO.S=CO.S.filter(function(s){return s.a>0;});}
+ /* фон: түнгі аспан */
+ var g=c.createLinearGradient(0,0,0,fy);g.addColorStop(0,'#16213a');g.addColorStop(1,'#33476e');c.fillStyle=g;c.fillRect(0,0,w,h);
+ c.fillStyle='rgba(255,255,255,.8)';for(i=0;i<26;i++)c.fillRect((i*97.3)%w,(i*53.7)%(ry-8),1.6,1.6);
+ c.fillStyle='#2b2620';c.fillRect(0,fy+6,w,h-fy);c.fillStyle='#e9eef5';c.fillRect(0,fy+6,w,5);
+ c.fillStyle='rgb(200,205,215)';CO.S.forEach(function(s){c.globalAlpha=Math.max(0,s.a)*.5;c.beginPath();c.arc(s.x,s.y,s.r,0,6.2832);c.fill();});c.globalAlpha=1;
+ /* шатыр, мұржа */
+ c.fillStyle='#7a3b2a';c.beginPath();c.moveTo(rx-10,ry);c.lineTo((rx+rx2)/2,ry-44);c.lineTo(rx2+10,ry);c.closePath();c.fill();
+ c.fillStyle='#9b5a3c';c.fillRect(chx,6,chw,sy-6);c.strokeStyle='rgba(60,25,15,.35)';c.lineWidth=1;for(by=12;by<ry;by+=8){c.beginPath();c.moveTo(chx,by);c.lineTo(chx+chw,by);c.stroke();}
+ /* бөлме */
+ c.fillStyle='#f3e8cf';c.fillRect(rx,ry,rx2-rx,fy-ry);
+ c.fillStyle='#9b5a3c';c.fillRect(chx,ry,chw,sy-ry);
+ var cy=ry+16;c.strokeStyle=CO.dmp?'#2e8b57':'#c8372d';c.lineWidth=3.5;c.beginPath();if(CO.dmp){c.moveTo(chx+chw/2,cy-7);c.lineTo(chx+chw/2,cy+7);}else{c.moveTo(chx-3,cy);c.lineTo(chx+chw+3,cy);}c.stroke();
+ txt(c,'қақпақ '+(CO.dmp?'ашық':'жабық'),chx+chw+6,cy+4,CO.dmp?'#2e8b57':'#c8372d',11.5,'left','700');
+ c.fillStyle='#b5653f';rr(c,sx,sy,sw,sh,3);c.fill();c.strokeStyle='rgba(70,30,15,.4)';for(by=sy+9;by<fy;by+=9){c.beginPath();c.moveTo(sx,by);c.lineTo(sx+sw,by);c.stroke();}
+ var fl=.6+.4*Math.sin(TT*13)*Math.sin(TT*7.3);c.fillStyle='#2e2119';c.fillRect(sx+12,sy+sh*.38,sw-24,sh*.32);c.fillStyle='rgba(255,'+(110+Math.round(60*fl))+',30,'+(.55+.35*fl)+')';c.fillRect(sx+15,sy+sh*.38+4,sw-30,sh*.32-7);
+ /* төсек, ұйықтап жатқан адам */
+ var bx=rx+(rx2-rx)*.42,bw=(rx2-rx)*.36;c.fillStyle='#6b4a2e';c.fillRect(bx,fy-22,bw,6);c.fillRect(bx,fy-16,5,16);c.fillRect(bx+bw-5,fy-16,5,16);
+ c.fillStyle='#fff';rr(c,bx+4,fy-33,24,11,4);c.fill();ball(c,bx+16,fy-36,7,'#e8c39e','#a0764e');c.fillStyle='#6c7fb5';rr(c,bx+22,fy-32,bw-26,11,4);c.fill();
+ txt(c,ppm<200?'z z z':ppm<800?'ох…':'!!!',bx+16,fy-48,ppm<200?'#56637a':'#c8372d',13,'center','700');
+ /* қабырғалар, терезе */
+ c.fillStyle='#8a6a4a';c.fillRect(rx-5,ry,5,fy-ry);c.fillRect(rx2,ry,5,wy1-ry);c.fillRect(rx2,wy2,5,fy-wy2);c.fillRect(rx-5,ry-4,rx2-rx+10,5);c.fillRect(rx-5,fy,rx2-rx+10,6);
+ if(CO.win){c.strokeStyle='#cfe3f2';c.lineWidth=3;c.beginPath();c.moveTo(rx2+2,wy1);c.lineTo(rx2+26,wy1+12);c.stroke();txt(c,'ашық',rx2+8,wy2+14,'#cfe3f2',11,'left','700');}
+ else{c.fillStyle='rgba(170,210,240,.75)';c.fillRect(rx2,wy1,5,wy2-wy1);}
+ /* молекулалар */
+ c.fillStyle='rgba(37,99,168,.45)';CO.A.forEach(function(p){c.beginPath();c.arc(p.x,p.y,2.1,0,6.2832);c.fill();});
+ CO.P.forEach(function(p){c.fillStyle='rgba(205,45,35,'+(.9*Math.max(0,p.a))+')';c.beginPath();c.arc(p.x,p.y,2.7,0,6.2832);c.fill();});
+ /* детектор */
+ var al=ppm>=50,on=al&&Math.sin(TT*10)>0;c.fillStyle='#fff';rr(c,rx2-34,dy-12,28,24,4);c.fill();c.strokeStyle='#8a93a3';c.lineWidth=1;c.stroke();
+ c.fillStyle=al?(on?'#ff2a1a':'#7a1d16'):'#2ecc71';c.beginPath();c.arc(rx2-20,dy-2,4,0,6.2832);c.fill();txt(c,'CO',rx2-20,dy+9,'#56637a',8.5,'center','700');
+ if(on)txt(c,'БИП!',rx2-20,dy-17,'#c8372d',12,'center','800');
+ /* аңыз, сағат */
+ c.fillStyle='rgba(225,60,45,.95)';c.beginPath();c.arc(14,14,4,0,6.2832);c.fill();txt(c,'CO',22,18.5,'#fff',12,'left','700');
+ c.fillStyle='rgba(120,170,230,.95)';c.beginPath();c.arc(54,14,4,0,6.2832);c.fill();txt(c,'ауа (N₂, O₂)',62,18.5,'#fff',12,'left','600');
+ txt(c,'☾ '+coClock()+(CO.t>=9?' — таң':''),w-10,19,'#ffe9a8',15,'right','700');
+ /* төменгі панель */
+ var N=CO.m/28*6.02e23,lv=coLvl(ppm);c.fillStyle='rgba(255,255,255,.94)';rr(c,8,h-56,w-16,50,6);c.fill();
+ txt(c,'CO: '+fx(ppm,0)+' ppm    m = '+fx(CO.m,1)+' г    N = '+coE(N),16,h-37,INK,13.5,'left','700');
+ var x0=16,bw2=w*.5,bh=8,y0=h-27,sc=function(v){return x0+bw2*Math.min(v,2000)/2000;};
+ [[0,50,'#2e8b57'],[50,200,'#e3b23c'],[200,800,'#e0662f'],[800,1600,'#c8372d'],[1600,2000,'#8e1b14']].forEach(function(z){c.fillStyle=z[2];c.fillRect(sc(z[0]),y0,sc(z[1])-sc(z[0]),bh);});
+ var mx=sc(ppm);c.fillStyle=INK;c.beginPath();c.moveTo(mx,y0-1);c.lineTo(mx-5,y0-7);c.lineTo(mx+5,y0-7);c.closePath();c.fill();
+ [0,200,800,1600].forEach(function(v){txt(c,String(v),sc(v),y0+bh+10,'#7a8088',9.5,'center');});
+ txt(c,lv[0],x0+bw2+14,y0+8,lv[1],13,'left','800');};
+function coUi(){$('coDmp').textContent='Қақпақ: '+(CO.dmp?'ашық':'жабық');$('coDmp').classList.toggle('on',!CO.dmp);$('coWin').textContent='Терезе: '+(CO.win?'ашық':'жабық');$('coWin').classList.toggle('on',CO.win);}
+$('coDmp').onclick=function(){CO.dmp=!CO.dmp;coUi();SND.tick();};$('coWin').onclick=function(){CO.win=!CO.win;coUi();SND.tick();};
+$('coGo').onclick=function(){if(CO.t>=9){CO.t=0;CO.m=0;CO.P=[];}CO.run=!CO.run;this.textContent=CO.run?'⏸':'▶';};
+$('coFast').onclick=function(){CO.fast=!CO.fast;this.classList.toggle('on',CO.fast);};
+$('coRe').onclick=function(){CO.t=0;CO.m=0;CO.P=[];CO.dmp=true;CO.win=false;CO.run=true;$('coGo').textContent='⏸';coUi();};coUi();
+var COQ=[{q:'Бөлменің өлшемі 5×4×2,5 м. 1 м³ ауада ≈ 2,5·10²⁵ молекула бар. Бөлмеде барлығы неше молекула бар?',pre:'N = ',a:1.25,tol:.02,unit:'·10²⁷',hint:'V = 5·4·2,5 = 50 м³;  N = n·V',sol:'V = 50 м³;  N = 2,5·10²⁵ · 50 = 1,25·10²⁷'},
+ {q:'Детектор 400 ppm көрсетті: әр миллион молекуланың 400-і — CO. Бөлмедегі CO молекулаларының саны қанша?',pre:'N(CO) = ',a:5,tol:.02,unit:'·10²³',hint:'N(CO) = N · 400 / 10⁶',sol:'N(CO) = 1,25·10²⁷ · 4·10⁻⁴ = 5·10²³'},
+ {q:'Бұл CO-ның массасы қанша? (M = 28 г/моль, N<sub>A</sub> = 6,02·10²³ моль⁻¹)',pre:'m = ',a:23.3,tol:.03,unit:'г',hint:'ν = N/N<sub>A</sub>,  m = ν·M',sol:'ν = 5·10²³ / 6,02·10²³ ≈ 0,83 моль;  m = 0,83 · 28 ≈ 23 г — бір қасық қанттан аз зат адамға қауіпті!'},
+ {q:'M(CO) = 28 г/моль, ал ауа ≈ 29 г/моль. Детекторды қай жерге орнатқан дұрыс?',ch:['Тек еденге — CO ауадан әлдеқайда ауыр','Тыныс алу деңгейіне (≈1,5 м) — CO ауамен біркелкі араласады','Мұржаның ішіне — CO тек сол жерде болады'],a:1,sol:'Мольдік массалары жақын, ал диффузия молекулаларды бүкіл бөлмеге біркелкі таратады.'},
+ {q:'Түнде детектор дабыл қақты. Ең дұрыс әрекет қайсы?',ch:['Иіс жоқ болса, қауіп жоқ — ұйқыны жалғастыру','Терезе мен есікті ашып, барлығын далаға шығарып, 112-ге қоңырау шалу','Пешке тағы көмір салып, қақпақты мықтап жабу'],a:1}];
+COQ.forEach(function(o,i){o.cls='fl-q';o.head='Сұрақ '+(i+1);mkTask($('coQs'),o);});
+
+/* ===== 5: туннельдік микроскоп ===== */
+var ST={run:false,fast:false,line:0,x:0,px:0,cue:false,done:false,el:[],acc:0};
+var SNX=72,SNY=40,SX=18,SY=10,STA=[];
+(function(){for(var j=-1;j<13;j++)for(var i=-1;i<20;i++)STA.push([i+(mod(j,2))*.5,j*.866,.9,0]);for(var q=0;q<6;q++){var a=q/6*6.2832+.3;STA.push([9.2+.95*Math.cos(a),5.2+.95*Math.sin(a),1,1]);}})();
+function stZ(x,y){var z=0;for(var i=0;i<STA.length;i++){var A=STA[i],dx=x-A[0],dy=y-A[1],d2=dx*dx+dy*dy;if(d2<3)z+=A[2]*Math.exp(-d2/(A[3]?.2:.15));}
+ var mx=x-9.2,my=y-5.2;return z+.75*Math.exp(-(mx*mx+my*my)/2.2);}
+var STI=document.createElement('canvas');STI.width=SNX;STI.height=SNY;var STC=STI.getContext('2d'),STD=STC.createImageData(SNX,SNY);
+function stClr(){for(var i=0;i<STD.data.length;i+=4){STD.data[i]=34;STD.data[i+1]=40;STD.data[i+2]=46;STD.data[i+3]=255;}STC.putImageData(STD,0,0);}
+function stPix(i,j){var z=stZ((i+.5)/SNX*SX,(j+.5)/SNY*SY),b=clamp((z-.25)/1.55,0,1);b=Math.pow(b,.8);var k=4*(j*SNX+i);STD.data[k]=60+b*190;STD.data[k+1]=62+b*188;STD.data[k+2]=66+b*180;}
+function stCur(z){return Math.exp(-3*(2.6-z-1));}
+function stReset(){ST.run=false;ST.line=0;ST.x=0;ST.px=0;ST.cue=false;ST.done=false;ST.el=[];stClr();FZ.stm.hide();$('stGo').textContent='▶ Сканерлеу';$('stI').textContent='—';}
+LAB.cStm=function(c,w,h,dt){var Lw=w*.58,sx=(Lw-30)/SX,y0=h*.6,zs=34,yl=(ST.line+.5)/SNY*SY;
+ if(ST.run&&!FZ.stm.isOn()){var Ld=ST.fast?.07:.32;ST.x+=SX/Ld*dt;
+  while(ST.px<SNX&&(ST.px+.5)/SNX*SX<=ST.x){stPix(ST.px,ST.line);ST.px++;}
+  if(ST.x>=SX){while(ST.px<SNX){stPix(ST.px,ST.line);ST.px++;}ST.line++;ST.x=0;ST.px=0;if(ST.line>=SNY){ST.line=SNY-1;ST.x=SX;ST.run=false;ST.done=true;$('stGo').textContent='▶ Сканерлеу';toast('Сурет дайын: атомдар мен молекула көрінді!');}}
+  STC.putImageData(STD,0,0);
+  if(!ST.cue&&ST.line===20&&ST.x>8.6){ST.cue=true;FZ.stm.show({num:'Сұрақ',q:'Ине молекуланың үстінен өткенде ток кенет артты. Неге?',a:'Ине мен үлгінің арасы <b>азайды</b>. Туннельдік ток қашықтыққа өте сезімтал: саңылау 0,1 нм кішірейсе, ток ~10 есе артады. Компьютер осы ток бойынша беттің <b>рельефін</b> салады.',side:'n'});}}
+ c.fillStyle='#f4f1ea';c.fillRect(0,0,w,h);
+ var tx=15+ST.x*sx,zt=stZ(ST.x,yl),I=stCur(zt);if(ST.run||ST.line||ST.x)$('stI').textContent=fx(I*.8,2)+' нА';
+ c.beginPath();c.moveTo(15,h*.66);for(var px=0;px<=Lw-30;px+=3)c.lineTo(15+px,y0-stZ(px/sx,yl)*zs);c.lineTo(Lw-15,h*.66);c.closePath();var g=c.createLinearGradient(0,y0-70,0,h*.66);g.addColorStop(0,'#e3b778');g.addColorStop(1,'#8a5e2c');c.fillStyle=g;c.fill();
+ STA.forEach(function(A){if(Math.abs(A[1]-yl)<.42&&A[0]>-.3&&A[0]<SX+.3){var ax=15+A[0]*sx,az=y0-stZ(A[0],A[1])*zs+8;ball(c,ax,az,sx*.36,A[3]?'#7cc48a':'#e9b46f',A[3]?'#2e6b3c':'#8a5e2c');}});
+ var ay=y0-2.6*zs,pg=c.createLinearGradient(tx-26,0,tx+26,0);pg.addColorStop(0,'#5d6570');pg.addColorStop(.5,'#d5dbe2');pg.addColorStop(1,'#5d6570');c.fillStyle=pg;c.beginPath();c.moveTo(tx-22,42);c.lineTo(tx+22,42);c.lineTo(tx,ay);c.closePath();c.fill();
+ c.fillStyle='#3b4250';rr(c,tx-48,8,96,34,5);c.fill();txt(c,'Пьезосканер',tx,30,'#fff',12.5,'center','700');
+ if(ST.run&&!FZ.stm.isOn()){ST.acc+=I*45*dt;while(ST.acc>1){ST.acc--;ST.el.push({x:tx+(Math.random()-.5)*6,t:0});}}
+ var sy0=y0-zt*zs+6;ST.el=ST.el.filter(function(e){e.t+=dt;return e.t<.25;});ST.el.forEach(function(e){var yy=sy0+(ay-sy0)*(e.t/.25);c.fillStyle='#2563a8';c.beginPath();c.arc(e.x,yy,2.6,0,6.2832);c.fill();});
+ txt(c,'Ине',tx+28,ay-22,INK,13,'left','700');txt(c,'Үлгі беті · '+(ST.line+1)+'-жол',18,h*.66+16,'#646a73',12.5,'left','600');
+ var gy0=h*.73,gy1=h-14;c.fillStyle='#fff';rr(c,12,gy0-6,Lw-24,gy1-gy0+12,6);c.fill();c.strokeStyle='#d9d4c8';c.lineWidth=1;c.stroke();
+ c.strokeStyle='#c8372d';c.lineWidth=2;c.beginPath();for(px=0;px<=ST.x*sx;px+=3){var Iv=clamp(stCur(stZ(px/sx,yl))/2.2,0,1),gy=gy1-6-Iv*(gy1-gy0-14);if(px)c.lineTo(15+px,gy);else c.moveTo(15+px,gy);}c.stroke();
+ txt(c,'I, туннельдік ток',20,gy0+12,'#c8372d',12.5,'left','700');
+ var mx0=Lw+14,mw=w-mx0-14,sw=mw-24,sh=sw*SNY/SNX,my0=24;c.fillStyle='#2b2f36';rr(c,mx0,my0,mw,sh+24,10);c.fill();
+ c.imageSmoothingEnabled=true;c.drawImage(STI,mx0+12,my0+12,sw,sh);
+ if(!ST.done){var ly=my0+12+(ST.line+.5)/SNY*sh;c.strokeStyle='rgba(255,90,60,.8)';c.lineWidth=1.5;c.beginPath();c.moveTo(mx0+12,ly);c.lineTo(mx0+12+ST.x/SX*sw,ly);c.stroke();}
+ c.fillStyle='#3b4250';c.fillRect(mx0+mw/2-14,my0+sh+24,28,26);c.fillRect(mx0+mw/2-60,my0+sh+48,120,8);
+ txt(c,'Компьютер экраны',mx0+mw/2,my0+sh+76,'#646a73',13,'center','700');
+ dash(c,tx+48,24,mx0,my0+20,'rgba(59,66,80,.45)');};
+$('stGo').onclick=function(){if(ST.done)stReset();ST.run=!ST.run;this.textContent=ST.run?'⏸ Тоқтату':'▶ Сканерлеу';SND.tick();};
+$('stRe').onclick=stReset;$('stFast').onclick=function(){ST.fast=!ST.fast;this.classList.toggle('on',ST.fast);};
+
+/* ===== 6: броундық қозғалыс ===== */
+var BR={T:300,big:false,mol:true,x:0,y:0,vx:0,vy:0,init:false,path:[],tk:0,t:0,cued:false,M:[]};
+LAB.cBr=function(c,w,h,dt){var R=BR.big?30:15,s=Math.sqrt(BR.T/300);
+ if(!BR.init){BR.init=true;BR.x=w/2;BR.y=h/2;BR.path=[[BR.x,BR.y]];for(var i=0;i<300;i++)BR.M.push({x:Math.random()*w,y:Math.random()*h,q:Math.random()*6.2832,f:0});}
+ var live=!FZ.br.isOn();
+ if(live){var sig=(BR.big?40:95)*s,n=3,d=dt/n;for(var k=0;k<n;k++){BR.vx+=-2.2*BR.vx*d+sig*Math.sqrt(d)*gauss()*2.1;BR.vy+=-2.2*BR.vy*d+sig*Math.sqrt(d)*gauss()*2.1;BR.x+=BR.vx*d;BR.y+=BR.vy*d;}
+  if(BR.x<R){BR.x=R;BR.vx=Math.abs(BR.vx);}if(BR.x>w-R){BR.x=w-R;BR.vx=-Math.abs(BR.vx);}if(BR.y<R){BR.y=R;BR.vy=Math.abs(BR.vy);}if(BR.y>h-R){BR.y=h-R;BR.vy=-Math.abs(BR.vy);}
+  BR.t+=dt;BR.tk+=dt;if(BR.tk>=.5){BR.tk=0;BR.path.push([BR.x,BR.y]);if(BR.path.length>500)BR.path.shift();}
+  var vm=150*s;BR.M.forEach(function(m){m.q+=gauss()*.25;m.x+=vm*Math.cos(m.q)*dt;m.y+=vm*Math.sin(m.q)*dt;if(m.x<0||m.x>w){m.q=Math.PI-m.q;m.x=clamp(m.x,0,w);}if(m.y<0||m.y>h){m.q=-m.q;m.y=clamp(m.y,0,h);}
+   var dx=m.x-BR.x,dy=m.y-BR.y,dd=Math.sqrt(dx*dx+dy*dy);if(dd<R+2){m.q=Math.atan2(dy,dx)+(Math.random()-.5)*1.4;m.x=BR.x+dx/dd*(R+3);m.y=BR.y+dy/dd*(R+3);m.f=.15;}if(m.f>0)m.f-=dt;});
+  if(!BR.cued&&BR.t>6){BR.cued=true;FZ.br.show({num:'Сұрақ',q:'Бөлшекті ешкім итермейді, бірақ ол тынымсыз «билейді». Неге?',a:'Оны жан-жағынан <b>су молекулалары</b> соққылайды. Әр сәтте бір жақтан соққы көбірек болады — бөлшек сол жаққа ығысады. Бұл молекулалардың <b>үздіксіз бейберекет қозғалысының</b> дәлелі.',side:'n'});}}
+ var g=c.createRadialGradient(w/2,h/2,h*.2,w/2,h/2,w*.62);g.addColorStop(0,'#fbf8ef');g.addColorStop(1,'#d9d2bf');c.fillStyle=g;c.fillRect(0,0,w,h);
+ if(BR.mol)BR.M.forEach(function(m){c.fillStyle=m.f>0?'rgba(200,55,45,.9)':'rgba(37,99,168,.5)';c.beginPath();c.arc(m.x,m.y,m.f>0?3.2:2.2,0,6.2832);c.fill();});
+ c.strokeStyle='rgba(224,102,47,.85)';c.lineWidth=1.8;c.beginPath();BR.path.forEach(function(p,i){if(i)c.lineTo(p[0],p[1]);else c.moveTo(p[0],p[1]);});c.lineTo(BR.x,BR.y);c.stroke();
+ c.fillStyle='#b44d1f';BR.path.forEach(function(p){c.beginPath();c.arc(p[0],p[1],2.6,0,6.2832);c.fill();});
+ ball(c,BR.x,BR.y,R,'#e3b23c','#8a6410');
+ c.fillStyle='rgba(255,255,255,.88)';rr(c,10,h-36,250,26,5);c.fill();txt(c,'T = '+BR.T+' K · '+(BR.big?'ірі':'кіші')+' бөлшек · '+fx(BR.t,0)+' с',20,h-18,INK,13.5,'left','600');};
+$('brT').oninput=function(){BR.T=+this.value;$('brTv').textContent=BR.T+' K';};$('brTv').textContent='300 K';
+$('brSz').onclick=function(){BR.big=!BR.big;this.textContent='Бөлшек: '+(BR.big?'ірі':'кіші');};
+$('brMol').onclick=function(){BR.mol=!BR.mol;this.classList.toggle('on',BR.mol);};
+$('brCl').onclick=function(){BR.path=[[BR.x,BR.y]];};
+
+/* ===== 7: Штерн тәжірибесі — 3D ===== */
+var SN={init:false,R:null,n:40,rot:true,phi:0,yaw:.3,pitch:.68,dist:3.7,A:[],acc:0,fol:true};
+var SNTS=600,SNVM=650;
+function snNe(){return SN.rot?SN.n:0;}
+function snTxt(){var n=snNe(),w=2*Math.PI*n,s=w*.1*.09/SNVM;$('snNv').textContent=SN.n+' айн/с';$('snW').textContent=fx(w,0)+' рад/с';
+ $('snS').textContent=n?fx(s*1000,1)+' мм':'0';$('snV').textContent=n?'≈ '+SNVM+' м/с':'—';
+ $('snHud').innerHTML=n?'n = <b>'+n+'</b> айн/с · жолақ <b>s ≈ '+fx(s*1000,1)+' мм</b>-ге ығысты · υ = ωR(R−r)/s ≈ <b>650 м/с</b><br><span style="font-size:12.5px">Көрнекілік үшін ығысу ×5 үлкейтілген, айналу баяулатылған.</span>':'Цилиндрлер тыныш: күміс жолақ дәл саңылаудың <b>қарсысында</b> — қызыл сызықта.';}
+function snClear(){if(!SN.ctx)return;var c=SN.ctx;c.clearRect(0,0,2048,256);c.fillStyle='rgba(205,225,240,.28)';c.fillRect(0,0,2048,256);
+ c.strokeStyle='rgba(70,90,110,.18)';c.lineWidth=2;for(var i=0;i<36;i++){c.beginPath();c.moveTo(i*2048/36,0);c.lineTo(i*2048/36,256);c.stroke();}
+ c.strokeStyle='#d0302a';c.lineWidth=5;c.setLineDash([16,10]);c.beginPath();c.moveTo(1024,0);c.lineTo(1024,256);c.stroke();c.setLineDash([]);SN.tex.needsUpdate=true;SN.A=[];}
+function snInit(){SN.init=true;var cv=$('c3d');if(!window.THREE){$('snHud').innerHTML='three.min.js табылмады — оны HTML файлдың қасына салыңыз.';return;}
+ try{SN.R=new THREE.WebGLRenderer({canvas:cv,antialias:true});}catch(e){$('snHud').innerHTML='Бұл компьютерде WebGL қосылмаған.';return;}
+ SN.R.setClearColor(0xe9eef2);var S=SN.S=new THREE.Scene();SN.cam=new THREE.PerspectiveCamera(40,1.6,.05,50);
+ S.add(new THREE.HemisphereLight(0xffffff,0x8090a0,.95));var dl=new THREE.DirectionalLight(0xffffff,.65);dl.position.set(2,4,3);S.add(dl);
+ var pl=new THREE.PointLight(0xff8a3a,.8,1.6);S.add(pl);
+ var base=new THREE.Mesh(new THREE.CylinderGeometry(1.32,1.38,.08,64),new THREE.MeshStandardMaterial({color:0x5d6570,metalness:.4,roughness:.5}));base.position.y=-.56;S.add(base);for(var j=0;j<12;j++){var mk=new THREE.Mesh(new THREE.BoxGeometry(.03,.012,.14),new THREE.MeshBasicMaterial({color:j%3?0x9aa3ad:0xe0662f}));var aj=j/12*6.2832;mk.position.set(1.22*Math.sin(aj),-.515,1.22*Math.cos(aj));mk.rotation.y=aj;S.add(mk);}
+ var bell=new THREE.Mesh(new THREE.CylinderGeometry(1.26,1.26,1.12,64,1,true),new THREE.MeshStandardMaterial({color:0xbcd6ea,transparent:true,opacity:.1,side:THREE.DoubleSide,depthWrite:false}));bell.position.y=.04;S.add(bell);
+ var G=SN.G=new THREE.Group();S.add(G);
+ var tc=document.createElement('canvas');tc.width=2048;tc.height=256;SN.ctx=tc.getContext('2d');SN.tex=new THREE.CanvasTexture(tc);
+ var outer=new THREE.Mesh(new THREE.CylinderGeometry(1,1,.8,128,1,true),new THREE.MeshStandardMaterial({map:SN.tex,transparent:true,side:THREE.DoubleSide,depthWrite:false,roughness:.6}));G.add(outer);
+ var rimM=new THREE.MeshStandardMaterial({color:0x6b7380,metalness:.5,roughness:.4});[-.4,.4].forEach(function(y){var t=new THREE.Mesh(new THREE.TorusGeometry(1,.014,8,96),rimM);t.rotation.x=Math.PI/2;t.position.y=y;G.add(t);});
+ var disk=new THREE.Mesh(new THREE.CircleGeometry(1,64),new THREE.MeshStandardMaterial({color:0xc3ccd5,roughness:.7}));disk.rotation.x=-Math.PI/2;disk.position.y=-.401;G.add(disk);
+ for(var i=0;i<6;i++){var bar=new THREE.Mesh(new THREE.BoxGeometry(.04,.01,.8),new THREE.MeshStandardMaterial({color:0x7a8490}));var a=i/6*Math.PI;bar.rotation.y=a;bar.position.y=-.395;G.add(bar);}
+ var inner=new THREE.Mesh(new THREE.CylinderGeometry(.12,.12,.8,48,1,true,Math.PI+.07,2*Math.PI-.14),new THREE.MeshStandardMaterial({color:0x9aa3ad,metalness:.6,roughness:.35,side:THREE.DoubleSide}));G.add(inner);
+ var sl=new THREE.Mesh(new THREE.BoxGeometry(.012,.8,.012),new THREE.MeshBasicMaterial({color:0x2563a8}));sl.position.set(0,0,-.125);G.add(sl);
+ var wire=new THREE.Mesh(new THREE.CylinderGeometry(.016,.016,1.02,12),new THREE.MeshStandardMaterial({color:0xff7a2a,emissive:0xff5a10,emissiveIntensity:.9}));S.add(wire);
+ var shaft=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,.16,24),rimM);shaft.position.y=-.48;S.add(shaft);
+ SN.pos=new Float32Array(1500*3);SN.geo=new THREE.BufferGeometry();SN.geo.setAttribute('position',new THREE.BufferAttribute(SN.pos,3));
+ SN.pts=new THREE.Points(SN.geo,new THREE.PointsMaterial({color:0x4a515c,size:.028}));SN.pts.frustumCulled=false;S.add(SN.pts);
+ snClear();
+ var drag=null;cv.addEventListener('pointerdown',function(e){drag=[e.clientX,e.clientY];try{cv.setPointerCapture(e.pointerId);}catch(x){}cv.style.cursor='grabbing';});
+ cv.addEventListener('pointermove',function(e){if(!drag)return;SN.yaw-=(e.clientX-drag[0])*.008;SN.pitch=clamp(SN.pitch+(e.clientY-drag[1])*.006,.08,1.5);drag=[e.clientX,e.clientY];});
+ var up=function(){drag=null;cv.style.cursor='';};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+ cv.addEventListener('wheel',function(e){SN.dist=clamp(SN.dist*(e.deltaY>0?1.08:.93),1.4,6);e.preventDefault();},{passive:false});}
+function snStep(dt){var wv=2*Math.PI*snNe()/SNTS;SN.phi+=wv*dt;SN.G.rotation.y=SN.phi;
+ SN.acc+=dt*4200;var nn=Math.floor(SN.acc);SN.acc-=nn;
+ for(var i=0;i<nn&&SN.A.length<1500;i++){var g1=gauss(),g2=gauss(),g3=gauss(),v=Math.sqrt(g1*g1+g2*g2+g3*g3)*407;SN.A.push({th:Math.random()*6.2832,r:.02,y:(Math.random()-.5)*.62,v:v*.00326,inn:true});}
+ var c=SN.ctx,dep=false;
+ SN.A=SN.A.filter(function(a){a.r+=a.v*dt;
+  if(a.inn&&a.r>=.12){a.inn=false;if(Math.abs(mod(a.th-SN.phi,2*Math.PI)-Math.PI)>.065)return false;}
+  if(a.r>=1){var u=mod(a.th-SN.phi,2*Math.PI)/(2*Math.PI);c.fillStyle='rgba(40,44,52,.5)';c.beginPath();c.arc(u*2048,(.4-a.y)/.8*256,3.4,0,6.2832);c.fill();dep=true;return false;}
+  return true;});
+ if(dep)SN.tex.needsUpdate=true;
+ var p=SN.pos,k=0;for(i=0;i<SN.A.length;i++){var a=SN.A[i];p[k++]=a.r*Math.sin(a.th);p[k++]=a.y;p[k++]=a.r*Math.cos(a.th);}
+ SN.geo.attributes.position.needsUpdate=true;SN.geo.setDrawRange(0,SN.A.length);}
+TICK.sn=function(dt){var cv=$('c3d');if(!SN.init){snInit();snTxt();}if(!SN.R)return;var w=cv.clientWidth,h=cv.clientHeight;if(!w)return;
+ var k=Math.min(2,(window.devicePixelRatio||1)*SCALE),W=Math.round(w*k),H=Math.round(h*k);
+ if(cv.width!==W||cv.height!==H){SN.R.setSize(W,H,false);SN.cam.aspect=w/h;SN.cam.updateProjectionMatrix();}
+ snStep(dt);var cp=Math.cos(SN.pitch),yw=SN.yaw+(SN.fol?SN.phi:0);SN.cam.position.set(SN.dist*cp*Math.sin(yw),SN.dist*Math.sin(SN.pitch),SN.dist*cp*Math.cos(yw));SN.cam.lookAt(0,-.08,0);
+ SN.R.render(SN.S,SN.cam);};
+$('snN').oninput=function(){SN.n=+this.value;snClear();snTxt();};
+$('snRot').onclick=function(){SN.rot=!SN.rot;this.classList.toggle('on',SN.rot);this.textContent='⟳ Айналу: '+(SN.rot?'қосулы':'тоқтатулы');snClear();snTxt();};
+$('snClr').onclick=function(){snClear();};
+$('snFol').onclick=function(){SN.fol=!SN.fol;this.classList.toggle('on',SN.fol);this.textContent='🎥 Камера: '+(SN.fol?'цилиндрмен бірге':'тыныш');};
+$('snTop').onclick=function(){var top=SN.pitch<1.3;SN.pitch=top?1.5:.68;SN.yaw=top?0:.3;this.textContent=top?'Қиғаш қарау':'Үстінен қарау';};
+$('snNv').textContent='40 айн/с';
+
+/* ===== 8: өзара әрекеттесу күштері ===== */
+var FI={r:1.6,v:0,run:false,drag:false};
+function fiF(r){return 1/Math.pow(r,9)-1/Math.pow(r,4);}
+function fiL(w){var Lw=w*.42,x0=70;return{Lw:Lw,x0:x0,S:(Lw-x0-60)/3};}
+LAB.cFr=function(c,w,h,dt){var L=fiL(w),Lw=L.Lw,x0=L.x0,S=L.S,y=h*.4,R=S*.44;
+ if(FI.run&&!FI.drag){for(var i=0;i<4;i++){var a=fiF(FI.r)/.31-.55*FI.v,d=dt/4;FI.v+=a*d;FI.r+=FI.v*d;if(FI.r<.8){FI.r=.8;FI.v=Math.abs(FI.v);}if(FI.r>3.1){FI.r=3.1;FI.v=0;}}}
+ var r=FI.r,F=fiF(r),Fr=1/Math.pow(r,9),Fa=1/Math.pow(r,4),x2=x0+r*S;
+ c.fillStyle='#fffdf9';c.fillRect(0,0,w,h);c.fillStyle='#f4efe4';rr(c,8,8,Lw-8,h-16,8);c.fill();
+ dash(c,x0+S,y-R-30,x0+S,y+R+80,'#b9b09c',1.2);txt(c,'r₀',x0+S,y-R-36,'#7a705c',15,'center','italic 700','Georgia,serif');
+ c.strokeStyle='#9a917e';c.lineWidth=1.5;c.beginPath();c.moveTo(x0,h-34);c.lineTo(x0+3.1*S,h-34);c.stroke();
+ [1,2,3].forEach(function(n){var X=x0+n*S;c.beginPath();c.moveTo(X,h-40);c.lineTo(X,h-28);c.stroke();txt(c,n===1?'r₀':n+'r₀',X,h-12,'#7a705c',13,'center','600');});
+ ball(c,x0,y,R,'#f08a55','#a8461a');ball(c,x2,y,R,'#f08a55','#a8461a');
+ arw(c,x0,y-R-12,x2,y-R-12,'#646a73',1.5);arw(c,x2,y-R-12,x0,y-R-12,'#646a73',1.5);txt(c,'r = '+fx(r,2)+' r₀',(x0+x2)/2,y-R-18,'#3b4250',14,'center','700');
+ var K=150,ya=y+R+22;if(Fr*K>3){arw(c,x2,ya,x2+Math.min(Fr*K,150),ya,'#c8372d',3);txt(c,'F теб',x2+8,ya-7,'#c8372d',12.5,'left','700');}
+ if(Fa*K>3){arw(c,x2,ya+26,x2-Math.min(Fa*K,150),ya+26,'#2563a8',3);txt(c,'F тарт',x2-8,ya+19,'#2563a8',12.5,'right','700');}
+ if(Math.abs(F*K)>3)arw(c,x2,ya+52,x2+clamp(F*K,-150,150),ya+52,'#1e2430',4);txt(c,'F = '+fx(F,2),x2,ya+76,'#1e2430',13.5,'center','700');
+ var gx0=Lw+56,gx1=w-24,gy0=22,gy1=h-34,X=function(v){return gx0+(v-.8)/(3.1-.8)*(gx1-gx0);},Y=function(v){return gy0+(1.6-v)/(1.6+1.1)*(gy1-gy0);};
+ c.strokeStyle='#1e2430';c.lineWidth=1.5;arw(c,gx0,Y(0),gx1+8,Y(0),'#1e2430',1.6);arw(c,gx0,gy1,gx0,gy0-6,'#1e2430',1.6);
+ txt(c,'F',gx0-18,gy0+8,INK,17,'left','italic 700','Georgia,serif');txt(c,'r',gx1+4,Y(0)+22,INK,17,'left','italic 700','Georgia,serif');txt(c,'0',gx0-16,Y(0)+5,INK,14);
+ c.save();c.beginPath();c.rect(gx0,gy0-4,gx1-gx0,gy1-gy0+4);c.clip();
+ function curve(f,col,wd,ds){c.strokeStyle=col;c.lineWidth=wd;c.setLineDash(ds||[]);c.beginPath();for(var v=.8;v<=3.1;v+=.01){var q=Y(clamp(f(v),-1.2,1.8));if(v<=.8)c.moveTo(X(v),q);else c.lineTo(X(v),q);}c.stroke();c.setLineDash([]);}
+ curve(function(v){return 1/Math.pow(v,9);},'#c8372d',2,[7,5]);curve(function(v){return -1/Math.pow(v,4);},'#2563a8',2,[7,5]);curve(fiF,'#1e2430',3.2);c.restore();
+ dash(c,X(1),Y(0)-8,X(1),Y(0)+8,'#1e2430',1);txt(c,'r₀',X(1)+2,Y(0)+22,INK,15,'left','italic 700','Georgia,serif');
+ txt(c,'1. Тебілу күші',X(1.22),Y(1.3),'#c8372d',14,'left','700');txt(c,'2. Тартылыс күші',X(1.35),Y(-.72),'#2563a8',14,'left','700');txt(c,'3. Өзара әрекеттесу күші',X(1.7),Y(-.22)+24,'#1e2430',14,'left','700');
+ dash(c,X(r),gy0,X(r),gy1,'rgba(224,102,47,.6)',1.5);c.fillStyle='#e0662f';c.beginPath();c.arc(X(r),Y(clamp(F,-1.2,1.8)),6,0,6.2832);c.fill();
+ var st=r<.97?1:r<1.04?2:3;['frc1','frc2','frc3'].forEach(function(id,i){$(id).style.boxShadow=st===i+1?'0 0 0 3px rgba(224,102,47,.55)':'';});
+ $('frTxt').innerHTML=r>2.4?'Молекулалар алыс — әрекеттесу күші іс жүзінде <b>жоқ</b>.':st===1?'<b>Тебілу</b> басым: молекула итеріледі.':st===2?'<b>F ≈ 0</b>: тепе-теңдік қалпы.':'<b>Тартылыс</b> басым: молекула тартылады.';};
+(function(){var cv=$('cFr');function rr2(e){var b=cv.getBoundingClientRect(),w=cv.clientWidth,L=fiL(w),px=(e.clientX-b.left)/b.width*w;return{px:px,L:L};}
+ cv.addEventListener('pointerdown',function(e){var q=rr2(e);if(q.px>q.L.Lw)return;FI.drag=true;FI.v=0;FI.r=clamp((q.px-q.L.x0)/q.L.S,.8,3.1);try{cv.setPointerCapture(e.pointerId);}catch(x){}});
+ cv.addEventListener('pointermove',function(e){if(!FI.drag)return;var q=rr2(e);FI.r=clamp((q.px-q.L.x0)/q.L.S,.8,3.1);});
+ var up=function(){if(FI.drag){FI.drag=false;FI.run=true;FI.v=0;}};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);})();
+$('frGo').onclick=function(){if(Math.abs(FI.r-1)<.15)FI.r=1.45;FI.v=0;FI.run=true;SND.tick();};$('frRe').onclick=function(){FI.r=1.6;FI.v=0;FI.run=false;};
+
+/* ===== 9: Mr, ν, M калькуляторы ===== */
+var SUBS=[{f:'H<sub>2</sub>',Mr:2,e:'2·1 = 2',a:[['H',-.55,0],['H',.55,0]]},{f:'He',Mr:4,e:'4',a:[['He',0,0]]},
+ {f:'CH<sub>4</sub>',Mr:16,e:'12 + 4·1 = 16',a:[['C',0,0],['H',-.85,-.6],['H',.85,-.6],['H',-.6,.85],['H',.6,.85]]},
+ {f:'H<sub>2</sub>O',Mr:18,e:'2·1 + 16 = 18',a:[['O',0,-.15],['H',-.8,.55],['H',.8,.55]]},
+ {f:'N<sub>2</sub>',Mr:28,e:'2·14 = 28',a:[['N',-.6,0],['N',.6,0]]},{f:'O<sub>2</sub>',Mr:32,e:'2·16 = 32',a:[['O',-.62,0],['O',.62,0]]},
+ {f:'CO<sub>2</sub>',Mr:44,e:'12 + 2·16 = 44',a:[['O',-1.18,0],['C',0,0],['O',1.18,0]]}];
+var ATC={H:['#ffffff','#8d96a0',.42],He:['#eadcff','#8a72c0',.58],C:['#5c636e','#20242a',.62],N:['#7096ea','#2c4fa0',.6],O:['#ff6b5e','#a82a20',.64]};
+var MO={i:3};
+LAB.cMol=function(c,w,h){c.fillStyle='#fffdf9';c.fillRect(0,0,w,h);var s=SUBS[MO.i],u=52,cx=w/2,cy=h/2,an=Math.sin(TT*.8)*.25,ca=Math.cos(an),sa=Math.sin(an);
+ s.a.forEach(function(A){var C=ATC[A[0]],x=cx+(A[1]*ca-A[2]*sa)*u,y=cy+(A[1]*sa+A[2]*ca)*u,r=C[2]*u;ball(c,x,y,r,C[0],C[1]);txt(c,A[0],x,y+6,A[0]==='C'?'#fff':INK,r>20?17:14,'center','700');});};
+function molUpd(){var s=SUBS[MO.i],m=+$('molM').value,M=s.Mr*1e-3,nu=m*1e-3/M;$('molMv').textContent=m+' г';
+ $('molMr').innerHTML='M<sub>r</sub>('+s.f+') = '+s.e;$('mo1').innerHTML=fx(M,3)+' кг/моль';$('mo2').innerHTML=fx(nu,nu<10?2:1)+' моль';$('mo3').innerHTML=sci(nu*6.02e23);$('mo4').innerHTML=sci(M/6.02e23)+' кг';
+ each($('subs').children,function(b,i){b.classList.toggle('on',i===MO.i);});}
+SUBS.forEach(function(s,i){var b=document.createElement('button');b.className='btn';b.innerHTML=s.f;b.onclick=function(){MO.i=i;molUpd();SND.tick();};$('subs').appendChild(b);});
+$('molM').oninput=molUpd;molUpd();
+
+each(document.querySelectorAll('.qa'),function(q){q.onclick=function(){q.classList.toggle('open');SND.tick();};});
+stClr();
+
+/* ===== Ойын және деңгейлік тапсырмалар деректері ===== */
+var DUQ=[['МКТ-ның І қағидасы: заттар…','бөлшектерден тұрады','біртұтас, тесіксіз','тек атомдардан тұрады'],
+ ['Броундық қозғалысты кім байқады?','Р. Броун','Дж. Рэлей','О. Штерн'],
+ ['Молекула өлшемін алғаш бағалаған тәжірибе','май тамшысының жайылуы','цилиндрлердің айналуы','тозаңның қозғалысы'],
+ ['Штерн тәжірибесі нені өлшеді?','атомдардың жылдамдығын','молекула массасын','молекула өлшемін'],
+ ['Молекуланың өлшемі шамамен…','10<sup>−10</sup>–10<sup>−9</sup> м','10<sup>−5</sup> м','10<sup>−15</sup> м'],
+ ['r &lt; r<sub>0</sub> болғанда басым күш','тебілу','тартылыс','ауырлық'],
+ ['M<sub>r</sub>(H<sub>2</sub>O) = ?','18','10','17'],
+ ['Авогадро тұрақтысы N<sub>A</sub> ≈','6,02·10<sup>23</sup> моль<sup>−1</sup>','6,02·10<sup>−23</sup> моль<sup>−1</sup>','1,38·10<sup>23</sup> моль<sup>−1</sup>'],
+ ['Зат мөлшерінің бірлігі','моль','кг/моль','кг'],
+ ['Ыстық суда диффузия…','тезірек жүреді','баяулайды','тоқтайды'],
+ ['Атомдардың суретін алатын құрал','туннельдік микроскоп','лупа','телескоп'],
+ ['Штерн құрылғысы неге вакуумда?','атомдар ауамен соқтығыспауы үшін','цилиндр жылдам айналуы үшін','сым салқындауы үшін'],
+ ['ν = m / M формуласындағы M —','мольдік масса','молекула массасы','заттың массасы'],
+ ['Массаның атомдық бірлігі — көміртек атомы массасының…','1/12 бөлігі','1/16 бөлігі','жартысы'],
+ ['Иіс бөлмеге неліктен тарайды?','диффузия','кристалдану','балқу'],
+ ['r = r<sub>0</sub> болғанда тең әсерлі күш','нөлге тең','ең үлкен','тартылыс']];
+var LVT={
+ A:[{q:'МКТ-ның бірінші қағидасы қалай тұжырымдалады?',ch:['Барлық заттар араларында бос аралықтары бар бөлшектерден тұрады','Бөлшектер тек тартылады','Газ молекулалары қозғалмайды','Заттар біртұтас, бөлінбейді'],a:0},
+  {q:'Броундық қозғалыс нені дәлелдейді?',ch:['Заттың біртұтастығын','Молекулалардың үздіксіз бейберекет қозғалысын','Молекулалардың тек тартылатынын','Атомның құрылысын'],a:1},
+  {q:'Молекулалар арақашықтығы r = r<sub>0</sub> болғанда өзара әрекеттесу күші қандай?',ch:['Тебілу күші ең үлкен','Тартылыс күші ең үлкен','Тартылыс пен тебілу теңеседі: F = 0','Әрекеттесу шексіз үлкен'],a:2},
+  {q:'Авогадро тұрақтысының мәні:',ch:['6,02·10<sup>−23</sup> моль<sup>−1</sup>','1,38·10<sup>−23</sup> Дж/К','6,02·10<sup>23</sup> моль<sup>−1</sup>','9,8 Н/кг'],a:2}],
+ B:[{q:'Көмірқышқыл газының (CO<sub>2</sub>) мольдік массасы қандай? A<sub>r</sub>(C) = 12, A<sub>r</sub>(O) = 16.',pre:'M = ',a:.044,unit:'кг/моль',hint:'M<sub>r</sub> = 12 + 2·16; M = M<sub>r</sub>·10<sup>−3</sup>',sol:'M<sub>r</sub> = 44 ⇒ M = 0,044 кг/моль'},
+  {q:'36 г судағы зат мөлшері қанша?',pre:'ν = ',a:2,unit:'моль',hint:'ν = m / M, M(H<sub>2</sub>O) = 18 г/моль',sol:'ν = 36 / 18 = 2 моль'},
+  {q:'Көлемі 2 мм³ май тамшысы су бетінде 1 м² ауданға жайылды. Молекула диаметрі неше нанометр?',pre:'d = ',a:2,unit:'нм',hint:'d = V / S; 1 мм³ = 10<sup>−9</sup> м³',sol:'d = 2·10<sup>−9</sup> / 1 = 2·10<sup>−9</sup> м = 2 нм'},
+  {q:'Оттегі молекуласының (O<sub>2</sub>) массасын табыңыз.',pre:'m<sub>0</sub> = ',a:5.32,tol:.015,unit:'·10<sup>−26</sup> кг',hint:'m<sub>0</sub> = M / N<sub>A</sub>, M = 0,032 кг/моль',sol:'m<sub>0</sub> = 0,032 / 6,02·10<sup>23</sup> ≈ 5,32·10<sup>−26</sup> кг'}],
+ C:[{q:'Штерн тәжірибесі: R = 10 см, r = 1 см, цилиндрлер n = 40 айн/с жиілікпен айналады, жолақ s = 3,5 мм-ге ығысты.',parts:[
+   {q:'а) Бұрыштық жылдамдық ω қандай?',pre:'ω = ',a:251.2,unit:'рад/с',hint:'ω = 2πn',sol:'ω = 2·3,14·40 = 251,2 рад/с'},
+   {q:'б) Күміс атомдарының жылдамдығы қандай?',pre:'υ = ',a:646,tol:.015,unit:'м/с',hint:'υ = ωR(R − r) / s, барлығын метрге айналдыр',sol:'υ = 251,2·0,1·0,09 / 0,0035 ≈ 646 м/с'}]},
+  {q:'Массасы 9 кг мұнай (ρ = 900 кг/м³) су бетінде қалыңдығы 1/16 мкм (6,25·10<sup>−8</sup> м) пленка болып жайылды.',parts:[
+   {q:'а) Мұнайдың көлемі қандай?',pre:'V = ',a:.01,unit:'м³',hint:'V = m / ρ',sol:'V = 9 / 900 = 0,01 м³'},
+   {q:'б) Пленканың ауданы қандай?',pre:'S = ',a:160000,unit:'м²',hint:'S = V / d',sol:'S = 0,01 / 6,25·10<sup>−8</sup> = 160 000 м² = 0,16 км²'}]}]};
+
+/* ===== Жаттығу 17 ===== */
+var JX=[{q:'Инертті газдың 14,92·10<sup>25</sup> молекуласының массасы 5 кг. Бұл қандай газ?',parts:[
+  {q:'а) Мольдік массасы қандай?',pre:'M = ',a:20,tol:.02,unit:'г/моль',hint:'m<sub>0</sub> = m / N, M = m<sub>0</sub>·N<sub>A</sub>',sol:'m<sub>0</sub> = 5 / 14,92·10<sup>25</sup> ≈ 3,35·10<sup>−26</sup> кг; M = 3,35·10<sup>−26</sup>·6,02·10<sup>23</sup> ≈ 0,020 кг/моль = 20 г/моль'},
+  {q:'ә) Бұл қандай газ?',ch:['Гелий (4)','Неон (20)','Аргон (40)','Криптон (84)'],a:1,sol:'M<sub>r</sub> = 20 — <b>неон</b>'}]},
+ {q:'Амазонка сағасында массасы 62,3 кг ірі таза алтын табылған. Оның зат мөлшерін анықтаңдар.',pre:'ν = ',a:316,tol:.01,unit:'моль',hint:'ν = m / M, M(Au) = 0,197 кг/моль',sol:'ν = 62,3 / 0,197 ≈ 316 моль'},
+ {q:'Су бетіне тамызылған тығыздығы ρ = 920 кг/м³, массасы 0,023 мг минералды май тамшысы ауданы 60 см² қабықша құрады. Молекулалар бір қатарда орналасқан деп, олардың диаметрін анықтаңдар.',pre:'d = ',a:4.17,tol:.025,unit:'·10<sup>−9</sup> м',hint:'V = m / ρ, d = V / S; 0,023 мг = 2,3·10<sup>−8</sup> кг, 60 см² = 6·10<sup>−3</sup> м²',sol:'V = 2,3·10<sup>−8</sup> / 920 = 2,5·10<sup>−11</sup> м³; d = 2,5·10<sup>−11</sup> / 6·10<sup>−3</sup> ≈ 4,2·10<sup>−9</sup> м'},
+ {q:'Алюминийдің тығыздығы 2,7·10³ кг/м³. 1 м³ алюминийде қанша зат мөлшері бар?',pre:'ν = ',a:100000,unit:'моль',hint:'m = ρV, ν = m / M, M(Al) = 0,027 кг/моль',sol:'m = 2700 кг; ν = 2700 / 0,027 = 100 000 моль = 10<sup>5</sup> моль'},
+ {q:'Аспаптың айналу жиілігі 150 с<sup>−1</sup>. Штерн тәжірибесінде күміс жұғы молекулаларының бұрыштық ығысуы 5,4°. Ішкі және сыртқы цилиндрлер арасындағы қашықтық 2 см. Молекулалардың жылдамдығы қандай?',pre:'υ = ',a:200,tol:.02,unit:'м/с',hint:'φ = 5,4° = 0,0942 рад; t = φ / ω, ω = 2πn; υ = (R − r) / t',sol:'ω = 2·3,14·150 = 942 рад/с; t = 0,0942 / 942 = 10<sup>−4</sup> с; υ = 0,02 / 10<sup>−4</sup> = 200 м/с'}];
+var JXS={items:[]};
+function jxScore(){var g=0,d=0;JXS.items.forEach(function(s){g+=s.got;if(s.done)d++;});$('jxSc').innerHTML='Дұрыс: <b>'+g+'</b> / '+JXS.items.length+' · орындалды '+d+'/'+JXS.items.length;}
+function jxBuild(){var box=$('jx17');box.innerHTML='';JXS.items=[];
+ JX.forEach(function(o,i){if(o.parts){var card=document.createElement('div');card.className='lv-t';card.innerHTML='<div class="tn">'+(i+1)+'-есеп</div><div class="tq">'+o.q+'</div>';box.appendChild(card);
+   o.parts.forEach(function(p){p.cls='lv-sub';p.pts=1;JXS.items.push(mkTask(card,p,jxScore));});}
+  else{o.cls='lv-t';o.pts=1;o.head=(i+1)+'-есеп';JXS.items.push(mkTask(box,o,jxScore));}});jxScore();}
+$('jxRe').onclick=function(){jxBuild();toast('Жаттығу қайта басталды');};jxBuild();
+
+var DU={bag:[],q:null,n:0,N:10,s:[0,0],lock:[false,false],busy:false,on:false,tm:0};
+function shuf(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function duScore(p,pop){var b=$('duS'+(p+1));b.textContent=DU.s[p];if(pop){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');}}
+function duShow(){each(document.querySelectorAll('.du-b'),function(b){if(b.getAttribute('data-k')==='1')b.classList.add('du-ok');});}
+function duNext(){clearTimeout(DU.tm);if(!DU.on)return;if(DU.n>=DU.N){duEnd();return;}
+ if(!DU.bag.length)DU.bag=shuf(DUQ.slice());DU.q=DU.bag.pop();DU.n++;DU.lock=[false,false];DU.busy=false;
+ $('duQ').innerHTML='<small>Сұрақ '+DU.n+' / '+DU.N+'</small>'+DU.q[0];
+ [0,1].forEach(function(p){var P=$('duP'+(p+1)),box=P.querySelector('.du-op');P.classList.remove('du-win','du-lock');box.innerHTML='';
+  shuf([1,2,3]).forEach(function(k){var b=document.createElement('button');b.className='du-b';b.innerHTML=DU.q[k];b.setAttribute('data-k',k);
+   var hit=function(e){e.preventDefault();duTap(p,k,b);};
+   if(window.PointerEvent)b.addEventListener('pointerdown',hit);else{b.addEventListener('touchstart',hit);b.addEventListener('mousedown',hit);}box.appendChild(b);});});}
+function duTap(p,k,b){if(!DU.on||DU.busy||DU.lock[p])return;
+ if(k===1){DU.busy=true;DU.s[p]++;duScore(p,true);$('duP'+(p+1)).classList.add('du-win');duShow();SND.ok();DU.tm=setTimeout(duNext,1700);}
+ else{DU.lock[p]=true;b.classList.add('du-no');$('duP'+(p+1)).classList.add('du-lock');SND.bad();if(DU.lock[0]&&DU.lock[1]){DU.busy=true;duShow();DU.tm=setTimeout(duNext,2200);}}}
+function duEnd(){DU.on=false;var a=DU.s[0],b=DU.s[1];$('duQ').innerHTML='<small>Ойын аяқталды · '+a+' : '+b+'</small>'+(a===b?'🤝 Тең ойын! Екеуіңе де рақмет!':'🏆 '+(a>b?'1':'2')+'-ойыншы жеңді!');
+ if(a!==b)$('duP'+(a>b?1:2)).classList.add('du-win');SND.ok();}
+$('duGo').onclick=function(){DU.s=[0,0];DU.n=0;DU.on=true;duScore(0);duScore(1);$('duGo').textContent='↺ Қайта бастау';duNext();};
+$('duNx').onclick=function(){if(DU.on)duNext();};
+
+/* ===== Деңгейлік тапсырмалар ===== */
+var LV={items:[]};
+function lvBuild(){LV.items=[];['A','B','C'].forEach(function(L){var box=$('lv'+L);box.innerHTML='';
+ LVT[L].forEach(function(o,i){
+  if(o.parts){var card=document.createElement('div');card.className='lv-t';card.innerHTML='<div class="tn">C'+(i+1)+' · 4 балл</div><div class="tq">'+o.q+'</div>';box.appendChild(card);
+   o.parts.forEach(function(p){p.cls='lv-sub';p.pts=2;LV.items.push(mkTask(card,p,lvScore));});}
+  else{o.cls='lv-t';o.pts=L==='A'?1:2;o.head=L+(i+1)+' · '+o.pts+' балл';LV.items.push(mkTask(box,o,lvScore));}});});
+ lvScore(true);}
+function lvScore(quiet){var g=0,d=0;LV.items.forEach(function(s){g+=s.got;if(s.done)d++;});var all=d===LV.items.length,mk=g>=18?5:g>=14?4:g>=9?3:2;
+ $('lvSc').innerHTML='Балл: <b>'+g+'</b> / 20 · орындалды '+d+'/'+LV.items.length+(all?' · Баға: <b class="lv-mk">«'+mk+'»</b>':'');
+ if(all&&quiet!==true)toast('Барлық тапсырма орындалды! Баға: «'+mk+'»');}
+each(document.querySelectorAll('.lv-tab'),function(b){b.onclick=function(){var L=b.getAttribute('data-lv');
+ each(document.querySelectorAll('.lv-tab'),function(x){x.classList.toggle('on',x===b);});each(document.querySelectorAll('.lv-pane'),function(p){p.classList.toggle('on',p.id==='lv'+L);});SND.tick();};});
+$('lvRe').onclick=function(){lvBuild();toast('Тапсырмалар қайта басталды');};lvBuild();
+
+/* ===== Тақта ===== */
+var cur=0;
+var board=(function(){var cv=$('ink'),ctx=cv.getContext('2d'),ink=store.get('m17_ink',{}),color='#f2efe2',width=3.8,eraser=false,curS=null,saveT;
+ function list(){if(!ink[cur])ink[cur]=[];return ink[cur];}
+ function resize(){var r=cv.getBoundingClientRect();if(!r.width)return;var k=window.devicePixelRatio||1;cv.width=Math.round(r.width*k);cv.height=Math.round(r.height*k);redraw();}
+ function seg(s,i){var W=cv.width,H=cv.height,p=s.p,base=s.w*W/520;ctx.globalCompositeOperation=s.e?'destination-out':'source-over';ctx.strokeStyle=s.c;ctx.lineCap='round';ctx.lineJoin='round';
+  if(i===0){ctx.lineWidth=base*(.6+p[0][2]*.8);ctx.beginPath();ctx.moveTo(p[0][0]*W,p[0][1]*H);ctx.lineTo(p[0][0]*W+.1,p[0][1]*H);ctx.stroke();return;}
+  var a=p[i-1],b=p[i],z=p[i-2]||a;ctx.lineWidth=base*(.6+b[2]*.8);ctx.beginPath();ctx.moveTo((z[0]+a[0])/2*W,(z[1]+a[1])/2*H);ctx.quadraticCurveTo(a[0]*W,a[1]*H,(a[0]+b[0])/2*W,(a[1]+b[1])/2*H);ctx.stroke();}
+ function redraw(){ctx.globalCompositeOperation='source-over';ctx.clearRect(0,0,cv.width,cv.height);var l=list();for(var j=0;j<l.length;j++)for(var i=0;i<l[j].p.length;i++)seg(l[j],i);ctx.globalCompositeOperation='source-over';}
+ function save(){clearTimeout(saveT);saveT=setTimeout(function(){store.set('m17_ink',ink);},400);}
+ function pt(e){var r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,e.pointerType==='pen'?(e.pressure||.5):.5];}
+ if(window.PointerEvent){cv.addEventListener('pointerdown',function(e){if(e.button>0&&e.pointerType==='mouse')return;try{cv.setPointerCapture(e.pointerId);}catch(x){}curS={c:color,w:eraser?width*5:width,e:eraser,p:[pt(e)]};list().push(curS);seg(curS,0);e.preventDefault();});
+  cv.addEventListener('pointermove',function(e){if(!curS)return;var evs=e.getCoalescedEvents?e.getCoalescedEvents():[e];for(var i=0;i<evs.length;i++){curS.p.push(pt(evs[i]));seg(curS,curS.p.length-1);}});
+  var end=function(){if(curS){curS=null;ctx.globalCompositeOperation='source-over';save();}};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);}
+ else{cv.addEventListener('touchstart',function(e){var t=e.changedTouches[0];curS={c:color,w:eraser?width*5:width,e:eraser,p:[pt(t)]};list().push(curS);seg(curS,0);e.preventDefault();});
+  cv.addEventListener('touchmove',function(e){if(!curS)return;var t=e.changedTouches[0];curS.p.push(pt(t));seg(curS,curS.p.length-1);e.preventDefault();});
+  cv.addEventListener('touchend',function(){curS=null;save();});
+  cv.addEventListener('mousedown',function(e){curS={c:color,w:eraser?width*5:width,e:eraser,p:[pt(e)]};list().push(curS);seg(curS,0);});
+  cv.addEventListener('mousemove',function(e){if(!curS)return;curS.p.push(pt(e));seg(curS,curS.p.length-1);});document.addEventListener('mouseup',function(){if(curS){curS=null;save();}});}
+ each(document.querySelectorAll('.sw'),function(b){b.onclick=function(){color=b.getAttribute('data-c');eraser=false;$('erase').classList.remove('on');each(document.querySelectorAll('.sw'),function(x){x.classList.toggle('on',x===b);});};});
+ each(document.querySelectorAll('[data-w]'),function(b){b.onclick=function(){width=+b.getAttribute('data-w');each(document.querySelectorAll('[data-w]'),function(x){x.classList.toggle('on',x===b);});};});
+ $('erase').onclick=function(){eraser=!eraser;$('erase').classList.toggle('on',eraser);};
+ function undo(){list().pop();redraw();save();}$('undo').onclick=undo;
+ $('wipe').onclick=function(){if(!list().length)return;ink[cur]=[];redraw();save();toast('Осы беттегі жазба тазаланды');};
+ return{resize:resize,redraw:redraw,undo:undo};})();
+function setBoard(open){$('stage').classList.toggle('noboard',!open);store.set('m17_board',open);$('bdT').textContent=open?'✎ Тақтаны жинау':'✎ Тақтаны ашу';setTimeout(function(){board.resize();},40);}
+$('bdT').onclick=function(){setBoard($('stage').classList.contains('noboard'));};$('bdClose').onclick=function(){setBoard(false);};$('bdOpen').onclick=function(){setBoard(true);};
+
+/* ===== Стоп-кадр объектілері ===== */
+FZ.ray=new Freezer('bRay');FZ.stm=new Freezer('bStm');FZ.br=new Freezer('bBr');
+/* ===== Навигация ===== */
+var slides=document.querySelectorAll('.slide');
+each(slides,function(s,i){var b=document.createElement('button');b.className='dot';b.textContent=i+1;b.title=s.getAttribute('data-title');b.onclick=function(){go(i);};$('dots').appendChild(b);});
+function go(i){i=clamp(i,0,slides.length-1);if(i!==cur)SND.page();slides[cur].classList.remove('on');cur=i;var s=slides[cur];s.classList.add('on');
+ $('stitle').textContent=s.getAttribute('data-title');$('bhint').textContent=s.getAttribute('data-hint')||'';
+ each($('dots').children,function(d,j){d.classList.toggle('on',j===cur);});$('cnt').textContent=(cur+1)+' / '+slides.length;store.set('m17_slide',cur);setTimeout(function(){board.resize();},30);}
+$('prev').onclick=function(){go(cur-1);};$('next').onclick=function(){go(cur+1);};
+document.addEventListener('keydown',function(e){var tg=document.activeElement&&document.activeElement.tagName;if(tg==='INPUT')return;var k=e.keyCode;
+ if(e.ctrlKey&&k===90){board.undo();e.preventDefault();return;}if(k===39||k===34){go(cur+1);e.preventDefault();}else if(k===37||k===33){go(cur-1);e.preventDefault();}else if(k===70)toggleFS();});
+function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement;}
+function toggleFS(){var d=document.documentElement;try{if(!fsEl()){var f=d.requestFullscreen||d.webkitRequestFullscreen;var r=f.call(d);if(r&&r['catch'])r['catch'](function(){toast('F11 пернесін басыңыз');});}else{(document.exitFullscreen||document.webkitExitFullscreen).call(document);}}catch(e){toast('F11 пернесін басыңыз');}}
+function fsLab(){var t=fsEl()?'✕ Толық экраннан шығу':'⛶ Толық экран';$('fs').textContent=t;$('fsTop').textContent=t;each(document.querySelectorAll('.fsb'),function(b){b.textContent=t;});}
+document.addEventListener('fullscreenchange',fsLab);document.addEventListener('webkitfullscreenchange',fsLab);
+$('fs').onclick=toggleFS;$('fsTop').onclick=toggleFS;
+$('snd').onclick=function(){$('snd').textContent=SND.toggle()?'🔊':'🔇';};$('snd').textContent=SND.isOn()?'🔊':'🔇';
+var SCALE=1;function fit(){SCALE=Math.min(innerWidth/1600,innerHeight/900);$('stage').style.transform='translate('+((innerWidth-1600*SCALE)/2)+'px,'+((innerHeight-900*SCALE)/2)+'px) scale('+SCALE+')';
+ $('stage').style.webkitTransform=$('stage').style.transform;board.resize();}
+window.addEventListener('resize',fit);
+setBoard(store.get('m17_board',true));fit();
+var hm=/^#(\d+)$/.exec(location.hash);go(hm?(+hm[1]-1):Math.min(store.get('m17_slide',0),slides.length-1));
+window.addEventListener('hashchange',function(){var m=/^#(\d+)$/.exec(location.hash);if(m)go(+m[1]-1);});
+var prevT=0;
+function loop(now){var dt=prevT?Math.min(.05,(now-prevT)/1000):0;prevT=now;TT+=dt;
+ each(slides[cur].querySelectorAll('canvas.lab'),function(cv){var L=LAB[cv.id];if(!L)return;FLBG='rgba(255,255,255,.75)';var w=cv.clientWidth,h=cv.clientHeight;if(!w)return;var k=Math.max(1,(window.devicePixelRatio||1)*SCALE);
+  var W=Math.round(w*k),H=Math.round(h*k);if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H;}var c=cv.getContext('2d');c.setTransform(k,0,0,k,0,0);L(c,w,h,dt);});
+ each(slides[cur].querySelectorAll('[data-tick]'),function(el){var f=TICK[el.getAttribute('data-tick')];if(f)f(dt);});
+ requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
