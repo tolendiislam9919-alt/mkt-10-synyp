@@ -177,6 +177,17 @@ canvas.t3-cv{display:block;width:100%;border:1px solid var(--line);border-radius
 #coQs .ck-ch{padding:4px 10px;font-size:13.5px}
 #coCtl .btn{padding:5px 10px;margin-right:5px}
 
+/* үлкейту */
+.zov{position:absolute;left:0;top:0;right:0;bottom:0;z-index:30;background:rgba(20,24,30,.82);display:none;align-items:center;justify-content:center}
+.zov.on{display:flex}
+.zwrap{flex:none;transform-origin:center center;background:var(--paper);border-radius:10px;padding:14px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.zwrap>*{width:100%!important;margin:0!important}
+.zx{position:absolute;top:16px;right:20px;width:64px;height:64px;border-radius:50%;font:700 30px "Segoe UI",Arial;background:#fff;color:#1e2430;border:none;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.zhint{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);color:#dfe3e8;font-size:15px}
+.stage.zpick .slide.on{cursor:zoom-in}
+.stage.zpick .slide.on .scn:hover,.stage.zpick .slide.on .card:hover,.stage.zpick .slide.on .fl-q:hover,.stage.zpick .slide.on .lv-t:hover,.stage.zpick .slide.on .qa:hover,.stage.zpick .slide.on .mtab:hover,.stage.zpick .slide.on canvas.lab:hover,.stage.zpick .slide.on h2.st:hover{outline:4px solid #e0a92e;outline-offset:2px}
+.bottom #zm{font-weight:700}
+.bottom #zm.on{background:#e0a92e;color:#1e2430;border-color:#e0a92e}
 </style>
 </head>
 <body>
@@ -399,8 +410,9 @@ canvas.t3-cv{display:block;width:100%;border:1px solid var(--line);border-radius
    <div class="bhint" id="bhint"></div><canvas id="ink"></canvas></div></div>
   <button class="btab" id="bdOpen">✎ Тақта</button>
  </div>
- <div class="bottom"><button class="btn" id="prev">◀ Артқа</button><span id="dots"></span><button class="btn main" id="next">Келесі ▶</button><span class="cnt" id="cnt"></span><button class="btn" id="snd">🔊</button><button class="btn" id="fs">⛶ Толық экран</button></div>
+ <div class="bottom"><button class="btn" id="prev">◀ Артқа</button><span id="dots"></span><button class="btn main" id="next">Келесі ▶</button><span class="cnt" id="cnt"></span><button class="btn" id="zm" title="Тапсырманы үлкейту (Z)">🔍 Үлкейту</button><button class="btn" id="snd">🔊</button><button class="btn" id="fs">⛶ Толық экран</button></div>
  <div class="toast" id="toast"></div>
+ <div class="zov" id="zov"><div class="zwrap" id="zWrap"></div><button class="zx" id="zx" title="Жабу (Esc)">✕</button><div class="zhint">Жабу: ✕, Esc немесе бос жерді басу</div></div>
 </div>
 
 <script src="three.min.js"></script>
@@ -782,7 +794,7 @@ function snStep(dt){var wv=2*Math.PI*snNe()/SNTS;SN.phi+=wv*dt;SN.G.rotation.y=S
  var p=SN.pos,k=0;for(i=0;i<SN.A.length;i++){var a=SN.A[i];p[k++]=a.r*Math.sin(a.th);p[k++]=a.y;p[k++]=a.r*Math.cos(a.th);}
  SN.geo.attributes.position.needsUpdate=true;SN.geo.setDrawRange(0,SN.A.length);}
 TICK.sn=function(dt){var cv=$('c3d');if(!SN.init){snInit();snTxt();}if(!SN.R)return;var w=cv.clientWidth,h=cv.clientHeight;if(!w)return;
- var k=Math.min(2,(window.devicePixelRatio||1)*SCALE),W=Math.round(w*k),H=Math.round(h*k);
+ var k=Math.min(2,(window.devicePixelRatio||1)*SCALE*zoomK(cv)),W=Math.round(w*k),H=Math.round(h*k);
  if(cv.width!==W||cv.height!==H){SN.R.setSize(W,H,false);SN.cam.aspect=w/h;SN.cam.updateProjectionMatrix();}
  snStep(dt);var cp=Math.cos(SN.pitch),yw=SN.yaw+(SN.fol?SN.phi:0);SN.cam.position.set(SN.dist*cp*Math.sin(yw),SN.dist*Math.sin(SN.pitch),SN.dist*cp*Math.cos(yw));SN.cam.lookAt(0,-.08,0);
  SN.R.render(SN.S,SN.cam);};
@@ -961,7 +973,23 @@ FZ.ray=new Freezer('bRay');FZ.stm=new Freezer('bStm');FZ.br=new Freezer('bBr');
 /* ===== Навигация ===== */
 var slides=document.querySelectorAll('.slide');
 each(slides,function(s,i){var b=document.createElement('button');b.className='dot';b.textContent=i+1;b.title=s.getAttribute('data-title');b.onclick=function(){go(i);};$('dots').appendChild(b);});
-function go(i){i=clamp(i,0,slides.length-1);if(i!==cur)SND.page();slides[cur].classList.remove('on');cur=i;var s=slides[cur];s.classList.add('on');
+/* ===== үлкейту: артқы партаға тапсырманы үлкен көрсету ===== */
+var ZSEL='.scn,canvas.lab,.fl-q,.lv-t,.qa,.mtab,.card,h2.st',ZM={pick:false,el:null,ph:null,h:'',s:1};
+function zoomPick(on){ZM.pick=on;$('stage').classList.toggle('zpick',on);$('zm').classList.toggle('on',on);if(on)toast('Үлкейтетін тапсырманы немесе суретті басыңыз');}
+function zoomFit(){if(!ZM.el)return;var wr=$('zWrap');ZM.s=Math.max(1,Math.min(1480/wr.offsetWidth,790/wr.offsetHeight,2.8));wr.style.transform='scale('+ZM.s+')';}
+function zoomClose(){if(ZM.el){ZM.el.style.height=ZM.h;ZM.ph.parentNode.replaceChild(ZM.el,ZM.ph);ZM.el=null;ZM.ph=null;ZM.s=1;}$('zov').classList.remove('on');}
+function zoomOpen(el){zoomClose();var w=el.offsetWidth,h=el.offsetHeight,ph=document.createElement('div'),wr=$('zWrap');ph.style.cssText='width:'+w+'px;height:'+h+'px;flex:none';
+ ZM.h=el.style.height;if(el.matches('.scn,canvas'))el.style.height=h+'px';el.parentNode.replaceChild(ph,el);ZM.el=el;ZM.ph=ph;wr.style.width=(w+28)+'px';wr.appendChild(el);$('zov').classList.add('on');zoomFit();zoomPick(false);SND.tick();}
+function zoomTarget(e){if(!ZM.pick||e.target.closest('.bottom,.rightw,.top'))return null;var el=e.target.closest(ZSEL);return el&&slides[cur].contains(el)?el:null;}
+function zoomK(cv){return ZM.el&&$('zWrap').contains(cv)?ZM.s:1;}
+function zoomAll(q){return [].slice.call(slides[cur].querySelectorAll(q)).concat([].slice.call($('zWrap').querySelectorAll(q)));}
+['pointerdown','mousedown','touchstart'].forEach(function(t){document.addEventListener(t,function(e){if(zoomTarget(e)){e.stopPropagation();if(e.cancelable)e.preventDefault();}},{capture:true,passive:false});});
+document.addEventListener('click',function(e){var el=zoomTarget(e);if(el){e.stopPropagation();e.preventDefault();zoomOpen(el);}},true);
+$('zm').onclick=function(){if(ZM.el){zoomClose();return;}zoomPick(!ZM.pick);};
+$('zx').onclick=zoomClose;$('zov').addEventListener('click',function(e){if(e.target===$('zov'))zoomClose();});
+document.addEventListener('keydown',function(e){if(e.keyCode===27){zoomClose();zoomPick(false);return;}var tg=document.activeElement&&document.activeElement.tagName;if(tg==='INPUT'||e.ctrlKey)return;if(e.keyCode===90)$('zm').onclick();});
+if(window.ResizeObserver)new ResizeObserver(zoomFit).observe($('zWrap'));
+function go(i){zoomClose();zoomPick(false);i=clamp(i,0,slides.length-1);if(i!==cur)SND.page();slides[cur].classList.remove('on');cur=i;var s=slides[cur];s.classList.add('on');
  $('stitle').textContent=s.getAttribute('data-title');$('bhint').textContent=s.getAttribute('data-hint')||'';
  each($('dots').children,function(d,j){d.classList.toggle('on',j===cur);});$('cnt').textContent=(cur+1)+' / '+slides.length;store.set('m17_slide',cur);setTimeout(function(){board.resize();},30);}
 $('prev').onclick=function(){go(cur-1);};$('next').onclick=function(){go(cur+1);};
@@ -981,9 +1009,9 @@ var hm=/^#(\d+)$/.exec(location.hash);go(hm?(+hm[1]-1):Math.min(store.get('m17_s
 window.addEventListener('hashchange',function(){var m=/^#(\d+)$/.exec(location.hash);if(m)go(+m[1]-1);});
 var prevT=0;
 function loop(now){var dt=prevT?Math.min(.05,(now-prevT)/1000):0;prevT=now;TT+=dt;
- each(slides[cur].querySelectorAll('canvas.lab'),function(cv){var L=LAB[cv.id];if(!L)return;FLBG='rgba(255,255,255,.75)';var w=cv.clientWidth,h=cv.clientHeight;if(!w)return;var k=Math.max(1,(window.devicePixelRatio||1)*SCALE);
+ each(zoomAll('canvas.lab'),function(cv){var L=LAB[cv.id];if(!L)return;FLBG='rgba(255,255,255,.75)';var w=cv.clientWidth,h=cv.clientHeight;if(!w)return;var k=Math.max(1,(window.devicePixelRatio||1)*SCALE*zoomK(cv));
   var W=Math.round(w*k),H=Math.round(h*k);if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H;}var c=cv.getContext('2d');c.setTransform(k,0,0,k,0,0);L(c,w,h,dt);});
- each(slides[cur].querySelectorAll('[data-tick]'),function(el){var f=TICK[el.getAttribute('data-tick')];if(f)f(dt);});
+ each(zoomAll('[data-tick]'),function(el){var f=TICK[el.getAttribute('data-tick')];if(f)f(dt);});
  requestAnimationFrame(loop);}
 requestAnimationFrame(loop);
 </script>
